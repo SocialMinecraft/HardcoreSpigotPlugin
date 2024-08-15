@@ -1,0 +1,6 @@
+database:
+  host: localhost # host of your database
+  port: 5432 # default port for postgres
+  database: hardcore # name of your database. A database server can contain multiple databases
+  user: username
+  password: passy

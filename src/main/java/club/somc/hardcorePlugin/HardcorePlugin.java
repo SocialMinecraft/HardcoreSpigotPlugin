@@ -1,0 +1,62 @@
+package club.somc.hardcorePlugin;
+
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.sql.SQLException;
+
+public final class HardcorePlugin extends JavaPlugin {
+
+    private  Database db;
+    private EvilManager evilManager;
+    private LifeManager lifeManager;
+
+    @Override
+    public void onEnable() {
+        super.onEnable();
+        saveDefaultConfig();
+        FileConfiguration config = getConfig();
+        //getConfig().get("database.host");
+
+        // Plugin startup logic
+        db = new Database();
+        try {
+            db.connect(
+                    config.getString("database.host"),
+                    config.getString("database.port"),
+                    config.getString("database.database"),
+                    config.getString("database.user"),
+                    config.getString("database.password")
+            );
+        } catch (SQLException e) {
+            //e.printStackTrace();
+            getLogger().warning(e.getMessage());
+            return;
+        } catch (ClassNotFoundException e) {
+            getLogger().warning(e.getMessage());
+            return;
+        }
+
+        evilManager = new EvilManager(db);
+        lifeManager = new LifeManager(getServer(), db);
+
+        getServer().getPluginManager().registerEvents(new EventListener(this, getLogger(),lifeManager,evilManager,db), this);
+
+        getLogger().info("HardcorePlugin enabled");
+    }
+
+    @Override
+    public void onDisable() {
+        // Plugin shutdown logic
+        try {
+            if (db != null)
+                db.close();
+        } catch (SQLException e) {
+            getLogger().warning(e.getMessage());
+        }
+
+        super.onDisable();
+        getLogger().info("HardcorePlugin disabled");
+    }
+
+}

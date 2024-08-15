@@ -1,0 +1,4 @@
+name: HardcorePlugin
+version: '1.0-SNAPSHOT'
+main: club.somc.hardcorePlugin.HardcorePlugin
+api-version: '1.21'

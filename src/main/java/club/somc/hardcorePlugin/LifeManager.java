@@ -92,6 +92,7 @@ public class LifeManager {
             green = board.getTeam("no_deaths");
             yellow = board.getTeam("one_death");
             red = board.getTeam("final_life");
+            ghost = board.getTeam("ghost");
             return;
         }
 

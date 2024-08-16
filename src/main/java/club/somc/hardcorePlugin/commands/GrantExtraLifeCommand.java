@@ -31,7 +31,7 @@ public class GrantExtraLifeCommand implements CommandExecutor, TabCompleter {
             return false;
         }
 
-        if (strings.length <= 2) {
+        if (strings.length < 2) {
             commandSender.sendMessage(ChatColor.RED + "Must provide player name and reason.");
             return false;
         }

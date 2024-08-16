@@ -41,6 +41,8 @@ public class LifeManager {
 
         // Get Player state
         int deaths = db.deathCount(player.getUniqueId());
+        int extraLives = db.extraLifeCount(player.getUniqueId());
+        deaths = Math.max(deaths-extraLives, 0);
 
         switch (deaths) {
             case 0:
@@ -57,6 +59,7 @@ public class LifeManager {
                 break;
             default:
                 player.setGameMode(GameMode.SPECTATOR);
+                ghost.addPlayer(player);
                 break;
         }
     }

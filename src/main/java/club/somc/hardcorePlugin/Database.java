@@ -79,6 +79,33 @@ public class Database {
         return result;
     }
 
+    public void storeExtraLife(UUID playerUuid, String reason) throws SQLException {
+        String sql = "INSERT INTO extra_lives (player_uuid, reason) VALUES (?,?,?)";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setObject(1, playerUuid);
+        statement.setString(2, reason);
+        statement.execute();
+        statement.close();
+    }
+
+    public int extraLifeCount(UUID playerUuid) throws SQLException {
+
+        String sql = "SELECT COUNT(*) FROM extra_lives WHERE player_uuid = ?";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setObject(1, playerUuid);
+        ResultSet resultSet = statement.executeQuery();
+
+        int result = 0;
+        while (resultSet.next()) {
+            result = resultSet.getInt(1);
+            break;
+        }
+        resultSet.close();
+        statement.close();
+
+        return result;
+    }
+
     /**
      * Used to keep track of who is playing and
      * when they last connected.

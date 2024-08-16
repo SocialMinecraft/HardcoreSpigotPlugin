@@ -80,7 +80,7 @@ public class Database {
     }
 
     public void storeExtraLife(UUID playerUuid, String reason) throws SQLException {
-        String sql = "INSERT INTO extra_lives (player_uuid, reason) VALUES (?,?,?)";
+        String sql = "INSERT INTO extra_lives (player_uuid, reason) VALUES (?,?)";
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.setObject(1, playerUuid);
         statement.setString(2, reason);

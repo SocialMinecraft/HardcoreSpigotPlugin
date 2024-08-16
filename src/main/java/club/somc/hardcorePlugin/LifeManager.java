@@ -83,6 +83,11 @@ public class LifeManager {
         this.updatePlayer(player);
     }
 
+    public void giveLife(Player player, String reason) throws SQLException {
+        db.storeExtraLife(player.getUniqueId(), reason);
+        this.updatePlayer(player);
+    }
+
 
     private void setupTeams() {
         ScoreboardManager manager = this.server.getScoreboardManager();

@@ -1,5 +1,6 @@
 package club.somc.hardcorePlugin;
 
+import club.somc.hardcorePlugin.commands.GrantExtraLifeCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -41,6 +42,9 @@ public final class HardcorePlugin extends JavaPlugin {
         lifeManager = new LifeManager(getServer(), db);
 
         getServer().getPluginManager().registerEvents(new EventListener(this, getLogger(),lifeManager,evilManager,db), this);
+
+        getCommand("extra_life").setExecutor(new GrantExtraLifeCommand(getLogger(), lifeManager));
+        getCommand("extra_life").setTabCompleter(new GrantExtraLifeCommand(getLogger(), lifeManager));
 
         getLogger().info("HardcorePlugin enabled");
     }

@@ -2,3 +2,12 @@ name: HardcorePlugin
 version: '1.0-SNAPSHOT'
 main: club.somc.hardcorePlugin.HardcorePlugin
 api-version: '1.21'
+commands:
+  mark_evil:
+    description: Will mark a player as evil.
+    usage: /<command> player reason
+    permission: hardcore.admin
+  extra_life:
+    description: Will give a player an extra life.
+    usage: /<command> player reason
+    permission: hardcore.admin

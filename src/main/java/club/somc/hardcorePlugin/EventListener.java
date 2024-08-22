@@ -37,15 +37,15 @@ public class EventListener implements Listener {
         // Lastly, update the player to have the correct team and evil status.
 
         try {
-            Date lastJoined = db.playerJoined(event.getPlayer().getUniqueId());
+            /*Date lastJoined =*/ db.playerJoined(event.getPlayer().getUniqueId());
 
-            if (lastJoined == null) {
+            /*if (lastJoined == null) {
                 int avgDeaths = db.averageDeaths(60*60*24*7); // Over last seven days
                 while (avgDeaths > 0) {
                     lifeManager.playerDied(event.getPlayer(), "New Player Rebalanced.");
                     avgDeaths--;
                 }
-            }
+            }*/
 
             lifeManager.updatePlayer(event.getPlayer());
             evilManager.updatePlayer(event.getPlayer());

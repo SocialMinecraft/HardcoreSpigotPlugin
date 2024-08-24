@@ -1,16 +1,18 @@
 package club.somc.hardcorePlugin;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.Date;
+import java.sql.SQLException;
 import java.util.logging.Logger;
 
 public class EventListener implements Listener {
@@ -27,6 +29,18 @@ public class EventListener implements Listener {
         this.logger = logger;
         this.db = db;
         this.plugin = plugin;
+    }
+
+    @EventHandler
+    public void onPlayerLeave(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+
+        int playtime =  player.getStatistic(Statistic.PLAY_ONE_MINUTE);
+        try {
+            db.updatePlaytime(player.getUniqueId(), playtime);
+        } catch (SQLException e) {
+            logger.warning(e.getMessage());
+        }
     }
 
     @EventHandler

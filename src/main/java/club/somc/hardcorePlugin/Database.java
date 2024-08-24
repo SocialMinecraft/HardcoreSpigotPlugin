@@ -106,6 +106,15 @@ public class Database {
         return result;
     }
 
+    public void updatePlaytime(UUID playerUuid, int playtime) throws SQLException {
+        String sql = "UPDATE players SET playtime = ? WHERE player_uuid = ?";
+
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setInt(1, playtime);
+        statement.setObject(2, playerUuid);
+        statement.execute();
+    }
+
     /**
      * Used to keep track of who is playing and
      * when they last connected.

@@ -8,6 +8,8 @@ CREATE TABLE players (
 ALTER TABLE players ADD playtime INT NOT NULL DEFAULT 0;
 UPDATE players SET playtime = coalesce((SELECT max(deaths.playtime) FROM deaths WHERE players.player_uuid = deaths.player_uuid), 0);
 
+ALTER TABLE players ADD name VARCHAR(17) NOT NULL DEFAULT 'Unknown'; /* Max user names are 16 characters, but adding an extra." */
+
 CREATE TABLE deaths (
     id BIGSERIAL PRIMARY KEY,
     stamp TIMESTAMP WITH TIME ZONE DEFAULT current_timestamp NOT NULL,

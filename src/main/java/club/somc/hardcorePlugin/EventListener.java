@@ -61,6 +61,9 @@ public class EventListener implements Listener {
                 }
             }*/
 
+            // Update username
+            db.updateUsername(event.getPlayer().getUniqueId(), event.getPlayer().getName());
+
             lifeManager.updatePlayer(event.getPlayer());
             evilManager.updatePlayer(event.getPlayer());
         } catch (Exception e) {

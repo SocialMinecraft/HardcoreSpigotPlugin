@@ -115,6 +115,14 @@ public class Database {
         statement.execute();
     }
 
+    public void updateUsername(UUID playerUuid, String username) throws SQLException {
+        String sql = "UPDATE players SET name = ? WHERE player_uuid = ?";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1, username);
+        statement.setObject(2, playerUuid);
+        statement.execute();
+    }
+
     /**
      * Used to keep track of who is playing and
      * when they last connected.

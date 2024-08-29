@@ -84,7 +84,7 @@ public class LifeManager {
     }
 
     public void giveLife(Player player, String reason) throws SQLException {
-        db.storeExtraLife(player.getUniqueId(), reason);
+        db.storeExtraLife(player.getUniqueId(), player.getStatistic(Statistic.PLAY_ONE_MINUTE), reason);
         this.updatePlayer(player);
     }
 

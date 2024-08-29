@@ -25,11 +25,12 @@ public class Database {
         }
     }
 
-    public void storeOffense(UUID playerUuid, String reason) throws SQLException {
-        String sql = "INSERT INTO offenses (player_uuid, reason) VALUES (?,?)";
+    public void storeOffense(UUID playerUuid, int playtime, String reason) throws SQLException {
+        String sql = "INSERT INTO offenses (player_uuid, reason, playtime) VALUES (?,?,?)";
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.setObject(1, playerUuid);
         statement.setString(2, reason);
+        statement.setInt(3, playtime);
         statement.execute();
         statement.close();
     }
@@ -79,11 +80,12 @@ public class Database {
         return result;
     }
 
-    public void storeExtraLife(UUID playerUuid, String reason) throws SQLException {
-        String sql = "INSERT INTO extra_lives (player_uuid, reason) VALUES (?,?)";
+    public void storeExtraLife(UUID playerUuid, int playtime, String reason) throws SQLException {
+        String sql = "INSERT INTO extra_lives (player_uuid, reason, playtime) VALUES (?,?,?)";
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.setObject(1, playerUuid);
         statement.setString(2, reason);
+        statement.setInt(3, playtime);
         statement.execute();
         statement.close();
     }

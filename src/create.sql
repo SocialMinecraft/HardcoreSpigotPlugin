@@ -27,6 +27,8 @@ CREATE TABLE offenses (
     FOREIGN KEY (player_uuid) REFERENCES players(player_uuid)
 );
 
+ALTER TABLE offenses ADD playtime int NOT NULL DEFAULT 0;
+
 CREATE TABLE extra_lives (
     id BIGSERIAL PRIMARY KEY,
     stamp TIMESTAMP WITH TIME ZONE DEFAULT  current_timestamp NOT NULL,
@@ -34,3 +36,5 @@ CREATE TABLE extra_lives (
     reason text,
     FOREIGN KEY (player_uuid) REFERENCES players(player_uuid)
 );
+
+ALTER TABLE extra_lives ADD playtime int NOT NULL DEFAULT 0;

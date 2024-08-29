@@ -1,5 +1,6 @@
 package club.somc.hardcorePlugin;
 
+import org.bukkit.Statistic;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -42,7 +43,7 @@ public class EvilManager {
     }
 
     public void addOffense(Player player, String resaon) throws SQLException {
-        db.storeOffense(player.getUniqueId(), resaon);
+        db.storeOffense(player.getUniqueId(), player.getStatistic(Statistic.PLAY_ONE_MINUTE), resaon);
 
         if (isEvilCache.containsKey(player.getUniqueId())) {
             isEvilCache.put(player.getUniqueId(), isEvilCache.get(player.getUniqueId()) + 1);

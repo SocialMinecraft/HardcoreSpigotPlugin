@@ -1,6 +1,7 @@
 package club.somc.hardcorePlugin;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
@@ -110,6 +111,8 @@ public class EventListener implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
+        if (player.getGameMode() != GameMode.SURVIVAL)
+            return;
 
         try {
             if (player.getKiller() != null && player.getKiller() instanceof Player) {

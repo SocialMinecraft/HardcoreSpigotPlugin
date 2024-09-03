@@ -41,7 +41,9 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent e) {
+        if (e.getRespawnReason() != PlayerRespawnEvent.RespawnReason.DEATH) return;
         Player player = e.getPlayer();
+        if (player.getGameMode() != GameMode.SURVIVAL) return;
 
         BukkitScheduler scheduler = plugin.getServer().getScheduler();
         scheduler.scheduleSyncDelayedTask(plugin, new Runnable() {

@@ -1,5 +1,8 @@
 package club.somc.hardcorePlugin;
 
+import org.bukkit.Statistic;
+import org.bukkit.entity.Player;
+
 import java.sql.*;
 import java.util.Calendar;
 import java.util.Date;
@@ -24,6 +27,34 @@ public class Database {
             connection.close();
         }
     }
+
+    /**
+     * Update the player data.
+     *
+     * @param Player The player to update the database for.
+     */
+    public void updatePlayer(Player player) throws SQLException {
+        String sql = """
+                INSERT INTO 
+                  players 
+                  (player_uuid, playtime, name) VALUES (?, ?, ?)
+                ON CONFLICT (player_uuid) DO UPDATE SET 
+                  playtime = EXCLUDED.playtime,
+                  name = EXCLUDED.name,
+                  last_seen = current_timestamp
+                ;
+                """;
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setObject(1, player.getUniqueId());
+        statement.setInt(2, player.getStatistic(Statistic.PLAY_ONE_MINUTE));
+        statement.setString(3, player.getName());
+        statement.execute();
+        statement.close();
+    }
+
+
+
+    /* OLD CODE */
 
     public void storeOffense(UUID playerUuid, int playtime, String reason) throws SQLException {
         String sql = "INSERT INTO offenses (player_uuid, reason, playtime) VALUES (?,?,?)";
@@ -123,40 +154,6 @@ public class Database {
         statement.setString(1, username);
         statement.setObject(2, playerUuid);
         statement.execute();
-    }
-
-    /**
-     * Used to keep track of who is playing and
-     * when they last connected.
-     *
-     * @param playerUuid
-     * @return The last time the player logged in.
-     *    Null if this is the first time they jointed.
-     */
-    public Date playerJoined(UUID playerUuid) throws SQLException {
-        String sql = """
-                INSERT INTO 
-                  players 
-                  (player_uuid) VALUES (?)
-                ON CONFLICT (player_uuid) DO UPDATE SET 
-                  prev_last_joined = players.last_joined,
-                  last_joined = current_timestamp
-                RETURNING 
-                  prev_last_joined;
-                """;
-        PreparedStatement statement = connection.prepareStatement(sql);
-        statement.setObject(1, playerUuid);
-        ResultSet resultSet = statement.executeQuery();
-
-        Date result = null;
-        while (resultSet.next()) {
-            result = resultSet.getTimestamp(1);
-            break;
-        }
-        resultSet.close();
-        statement.close();
-
-        return result;
     }
 
     /**

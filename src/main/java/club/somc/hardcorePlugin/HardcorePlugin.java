@@ -54,6 +54,12 @@ public final class HardcorePlugin extends JavaPlugin {
 
         Ghost ghost = new Ghost(15, getLogger());
         getServer().getPluginManager().registerEvents(ghost, this);
+
+        JoinGame join = new JoinGame(db, getLogger());
+        getServer().getPluginManager().registerEvents(join, this);
+
+        LeaveGame leave = new LeaveGame(db, getLogger());
+        getServer().getPluginManager().registerEvents(leave, this);
     }
 
     @Override

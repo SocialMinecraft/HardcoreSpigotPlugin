@@ -71,46 +71,6 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerLeave(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-
-        int playtime =  player.getStatistic(Statistic.PLAY_ONE_MINUTE);
-        try {
-            db.updatePlaytime(player.getUniqueId(), playtime);
-        } catch (SQLException e) {
-            logger.warning(e.getMessage());
-        }
-    }
-
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-
-        // Record the time the player joined the server.
-        // If this is the first time they have joined, re-balance their lives to average.
-        // Lastly, update the player to have the correct team and evil status.
-
-        try {
-            /*Date lastJoined =*/ db.playerJoined(event.getPlayer().getUniqueId());
-
-            /*if (lastJoined == null) {
-                int avgDeaths = db.averageDeaths(60*60*24*7); // Over last seven days
-                while (avgDeaths > 0) {
-                    lifeManager.playerDied(event.getPlayer(), "New Player Rebalanced.");
-                    avgDeaths--;
-                }
-            }*/
-
-            // Update username
-            db.updateUsername(event.getPlayer().getUniqueId(), event.getPlayer().getName());
-
-            lifeManager.updatePlayer(event.getPlayer());
-            evilManager.updatePlayer(event.getPlayer());
-        } catch (Exception e) {
-            logger.warning(e.getMessage());
-        }
-    }
-
-    @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
         if (player.getGameMode() != GameMode.SURVIVAL)

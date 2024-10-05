@@ -1,10 +1,9 @@
 CREATE TABLE players (
      player_uuid uuid PRIMARY KEY,
-     joined TIMESTAMP WITH TIME ZONE DEFAULT current_timestamp NOT NULL,
-     last_joined TIMESTAMP WITH TIME ZONE, /* Nullable */
-     prev_last_joined TIMESTAMP WITH TIME ZONE, /* Used for last join return */
-     name VARCHAR(17) NOT NULL DEFAULT 'Unknown',
-     playtime INT NOT NULL DEFAULT 0
+     joined      TIMESTAMP WITH TIME ZONE DEFAULT current_timestamp NOT NULL,
+     last_seen   TIMESTAMP WITH TIME ZONE DEFAULT current_timestamp NOT NULL,
+     name        VARCHAR(17) NOT NULL DEFAULT 'Unknown',
+     playtime    INT NOT NULL DEFAULT 0
 );
 
 CREATE TYPE event_type AS ENUM ('death', 'offense', 'bought', 'transaction', 'revived');

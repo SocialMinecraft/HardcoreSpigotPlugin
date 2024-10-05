@@ -10,6 +10,23 @@ import java.util.UUID;
 
 public class Database {
 
+    public enum EventType {
+        DEATH("death"),
+        REVIVED("revived"),
+        OFFENSE("offense"),
+        TRANSACTION("transaction");
+
+        private final String name;
+
+        EventType(String name) {
+            this.name = name;
+        }
+
+        public String toSqlString() {
+            return name;
+        }
+    }
+
     private Connection connection;
 
     public Database() {
@@ -64,6 +81,22 @@ public class Database {
         statement.close();
 
         return result;
+    }
+
+    public void addEvent(Player player, EventType eventType, String description) throws SQLException {
+        String sql = """
+                INSERT INTO 
+                  events 
+                  (player_uuid, playtime, type, description) VALUES (?, ?, ?::event_type, ?)
+                ;
+                """;
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setObject(1, player.getUniqueId());
+        statement.setInt(2, player.getStatistic(Statistic.PLAY_ONE_MINUTE));
+        statement.setString(3, eventType.toSqlString());
+        statement.setString(4, description);
+        statement.execute();
+        statement.close();
     }
 
 

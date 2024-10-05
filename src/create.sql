@@ -9,15 +9,12 @@ CREATE TABLE players (
 CREATE TYPE event_type AS ENUM ('death', 'offense', 'bought', 'transaction', 'revived');
 
 CREATE TABLE events (
-    id BIGSERIAL PRIMARY KEY,
-
-    stamp TIMESTAMP WITH TIME ZONE DEFAULT current_timestamp NOT NULL,
+    id          BIGSERIAL PRIMARY KEY,
+    stamp       TIMESTAMP WITH TIME ZONE DEFAULT current_timestamp NOT NULL,
     player_uuid UUID NOT NULL,
-    playtime int NOT NULL,
-    type event_type NOT NULL,
-
-    desc TEXT NOT NULL,
-
+    playtime    INT NOT NULL,
+    type        event_type NOT NULL,
+    description TEXT NOT NULL,
     FOREIGN KEY (player_uuid) REFERENCES players(player_uuid)
 );
 

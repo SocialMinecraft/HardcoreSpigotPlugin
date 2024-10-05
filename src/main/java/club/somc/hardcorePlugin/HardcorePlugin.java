@@ -60,6 +60,9 @@ public final class HardcorePlugin extends JavaPlugin {
 
         LeaveGame leave = new LeaveGame(db, getLogger());
         getServer().getPluginManager().registerEvents(leave, this);
+
+        Death death = new Death(db, getLogger());
+        getServer().getPluginManager().registerEvents(death, this);
     }
 
     @Override

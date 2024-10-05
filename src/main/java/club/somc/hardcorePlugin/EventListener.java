@@ -39,25 +39,6 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerDeath(PlayerDeathEvent event) {
-        Player player = event.getEntity();
-        if (player.getGameMode() != GameMode.SURVIVAL)
-            return;
-
-        try {
-            if (player.getKiller() != null && player.getKiller() instanceof Player) {
-                Player killer = (Player) player.getKiller();
-                evilManager.addOffense(killer, "Killed " + player.getName());
-                evilManager.updatePlayer(killer);
-            }
-
-            lifeManager.playerDied(player, event.getDeathMessage());
-        } catch (Exception e) {
-            logger.warning(e.getMessage());
-        }
-    }
-
-    @EventHandler
     public void onPotionEffect(EntityPotionEffectEvent event) {
         // we need to check that the entity is a player, they had the glowing effect, and they no longer have it.
         //logger.info(event.getEntity() instanceof Player ? "t" : "f");

@@ -2,6 +2,7 @@ package club.somc.hardcorePlugin;
 
 import club.somc.hardcorePlugin.shop.Shop;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.SQLException;
@@ -66,6 +67,9 @@ public final class HardcorePlugin extends JavaPlugin {
 
         Death death = new Death(db, getLogger(), shop, this);
         getServer().getPluginManager().registerEvents(death, this);
+
+        PlayerKiller playerKiller = new PlayerKiller(db, getLogger());
+        getServer().getPluginManager().registerEvents(playerKiller, this);
     }
 
     @Override

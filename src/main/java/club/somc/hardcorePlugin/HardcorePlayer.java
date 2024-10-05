@@ -47,6 +47,15 @@ public class HardcorePlayer {
         this.giveRespawnKit();
     }
 
+    public void offenseCommited(String reason) throws SQLException {
+        this.db.addEvent(
+                this.player,
+                Database.EventType.OFFENSE,
+                reason
+        );
+        this.updatePlayerState();
+    }
+
     public boolean isAlive() throws SQLException {
         return this.db.isAlive(player.getUniqueId());
     }

@@ -1,6 +1,7 @@
 package club.somc.hardcorePlugin;
 
 import club.somc.hardcorePlugin.shop.Shop;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -31,6 +32,9 @@ public class Death implements Listener {
     @EventHandler
     public void onDeath(PlayerDeathEvent e) {
         Player p = e.getEntity();
+        if (p.getGameMode() != GameMode.SURVIVAL)
+            return;
+
         HardcorePlayer hp = new HardcorePlayer(db, p);
 
         try {

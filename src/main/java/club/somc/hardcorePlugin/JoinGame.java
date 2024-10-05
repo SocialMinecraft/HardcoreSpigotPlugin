@@ -25,12 +25,16 @@ public class JoinGame implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
+        Boolean is_new;
         try {
-            db.updatePlayer(player);
+            is_new = db.updatePlayer(player);
         } catch (SQLException e) {
             logger.warning(e.getMessage());
+            return;
         }
+        logger.info("Is new? " + player.getName() + " - " + is_new);
 
+        // todo - is today the first join?
         // todo - update status and effects.
     }
 }

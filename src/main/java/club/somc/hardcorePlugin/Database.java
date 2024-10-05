@@ -32,8 +32,9 @@ public class Database {
      * Update the player data.
      *
      * @param Player The player to update the database for.
+     * @return True if the player is new, else false.
      */
-    public void updatePlayer(Player player) throws SQLException {
+    public boolean updatePlayer(Player player) throws SQLException {
         String sql = """
                 INSERT INTO 
                   players 
@@ -42,14 +43,27 @@ public class Database {
                   playtime = EXCLUDED.playtime,
                   name = EXCLUDED.name,
                   last_seen = current_timestamp
+                RETURNING
+                    (xmax = 0) AS is_new
                 ;
                 """;
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.setObject(1, player.getUniqueId());
         statement.setInt(2, player.getStatistic(Statistic.PLAY_ONE_MINUTE));
         statement.setString(3, player.getName());
-        statement.execute();
+        //statement.execute();
+        //statement.close();
+        ResultSet resultSet = statement.executeQuery();
+
+        boolean result = false;
+        while (resultSet.next()) {
+            result = resultSet.getBoolean(1);
+            break;
+        }
+        resultSet.close();
         statement.close();
+
+        return result;
     }
 
 

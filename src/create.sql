@@ -6,7 +6,7 @@ CREATE TABLE players (
      playtime    INT NOT NULL DEFAULT 0
 );
 
-CREATE TYPE event_type AS ENUM ('death', 'offense', 'bought', 'transaction', 'revived');
+CREATE TYPE event_type AS ENUM ('died', 'offense', 'bought', 'transaction', 'revived');
 
 CREATE TABLE events (
     id          BIGSERIAL PRIMARY KEY,

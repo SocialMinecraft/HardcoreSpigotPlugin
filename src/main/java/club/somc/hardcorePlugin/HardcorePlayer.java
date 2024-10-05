@@ -1,5 +1,6 @@
 package club.somc.hardcorePlugin;
 
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
@@ -14,10 +15,16 @@ public class HardcorePlayer {
         this.player = player;
     }
 
+    public void updatePlayerState() throws SQLException {
+
+        // Make sure dead players are ghosts.
+        if (!isAlive()) player.setGameMode(GameMode.SPECTATOR);
+    }
+
     public void died(String reason) throws SQLException {
         this.db.addEvent(
                 this.player,
-                Database.EventType.DEATH,
+                Database.EventType.DIED,
                 reason
         );
     }
@@ -30,8 +37,8 @@ public class HardcorePlayer {
         );
     }
 
-    public boolean isAlive() {
-        return true;
+    public boolean isAlive() throws SQLException {
+        return this.db.isAlive(player.getUniqueId());
     }
 
 

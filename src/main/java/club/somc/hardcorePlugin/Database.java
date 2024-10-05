@@ -11,7 +11,7 @@ import java.util.UUID;
 public class Database {
 
     public enum EventType {
-        DEATH("death"),
+        DIED("died"),
         REVIVED("revived"),
         OFFENSE("offense"),
         TRANSACTION("transaction");
@@ -97,6 +97,36 @@ public class Database {
         statement.setString(4, description);
         statement.execute();
         statement.close();
+    }
+
+    public boolean isAlive(UUID playerUuid) throws SQLException {
+        String sql = """
+                SELECT 
+                    type
+                FROM
+                    events
+                WHERE
+                    player_uuid = ? AND
+                    (type = 'died'::event_type OR type = 'revived'::event_type) 
+                ORDER BY 
+                    playtime DESC
+                LIMIT 1
+                ;
+                """;
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setObject(1, playerUuid);
+        ResultSet resultSet = statement.executeQuery();
+
+        boolean isAlive = true;
+        while (resultSet.next()) {
+            String type = resultSet.getString(1);
+            isAlive = !EventType.DIED.toSqlString().equals(type);
+            break;
+        }
+        resultSet.close();
+        statement.close();
+
+        return isAlive;
     }
 
 

@@ -6,6 +6,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.logging.Logger;
@@ -15,12 +16,14 @@ import java.util.logging.Logger;
  */
 public class Ghost implements Listener {
 
-    private int max_distance;
-    private Logger logger;
+    private final int max_distance;
+    private final Logger logger;
+    private final Database db;
 
-    public Ghost(int max_distance, Logger logger) {
+    public Ghost(int max_distance, Database db, Logger logger) {
         this.max_distance = max_distance;
         this.logger = logger;
+        this.db = db;
     }
 
     @EventHandler
@@ -39,6 +42,25 @@ public class Ghost implements Listener {
         if (loc.distance(player.getLocation()) > max_distance) {
             player.teleport(loc);
             player.playSound(loc, Sound.ENTITY_ENDERMAN_TELEPORT, 1.0f, 1.0f);
+        }
+    }
+
+    @EventHandler
+    public void onGameModeChange(PlayerGameModeChangeEvent event) {
+        Player player = event.getPlayer();
+        // no need to do anything if we are moving to spectator.
+        if (event.getNewGameMode() == GameMode.SPECTATOR) return;
+
+        logger.info("Hello");
+
+        HardcorePlayer hc = new HardcorePlayer(db, player);
+        try {
+            if (!hc.isAlive()) {
+                player.setGameMode(GameMode.SPECTATOR);
+                event.setCancelled(true);
+            }
+        } catch (Exception e) {
+            logger.warning(e.getMessage());
         }
     }
 }

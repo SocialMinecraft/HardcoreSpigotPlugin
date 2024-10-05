@@ -4,3 +4,5 @@ database:
   database: hardcore # name of your database. A database server can contain multiple databases
   user: username
   password: passy
+ghost:
+  distance: 50

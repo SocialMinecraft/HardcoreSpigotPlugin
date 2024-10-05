@@ -52,7 +52,7 @@ public final class HardcorePlugin extends JavaPlugin {
 
         getLogger().info("HardcorePlugin enabled");*/
 
-        Ghost ghost = new Ghost(15, getLogger());
+        Ghost ghost = new Ghost(config.getInt("ghost.distance", 50), getLogger());
         getServer().getPluginManager().registerEvents(ghost, this);
 
         JoinGame join = new JoinGame(db, getLogger());

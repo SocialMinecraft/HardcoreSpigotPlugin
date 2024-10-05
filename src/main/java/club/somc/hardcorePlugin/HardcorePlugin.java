@@ -52,16 +52,20 @@ public final class HardcorePlugin extends JavaPlugin {
 
         getLogger().info("HardcorePlugin enabled");*/
 
+        Shop shop = new Shop(db, getLogger(), config.getConfigurationSection("shop"));
+        getCommand("shop").setExecutor(shop);
+        getServer().getPluginManager().registerEvents(shop, this);
+
         Ghost ghost = new Ghost(config.getInt("ghost.distance", 50), db, getLogger());
         getServer().getPluginManager().registerEvents(ghost, this);
 
-        JoinGame join = new JoinGame(db, getLogger());
+        JoinGame join = new JoinGame(db, getLogger(), shop);
         getServer().getPluginManager().registerEvents(join, this);
 
         LeaveGame leave = new LeaveGame(db, getLogger());
         getServer().getPluginManager().registerEvents(leave, this);
 
-        Death death = new Death(db, getLogger());
+        Death death = new Death(db, getLogger(), shop, this);
         getServer().getPluginManager().registerEvents(death, this);
     }
 

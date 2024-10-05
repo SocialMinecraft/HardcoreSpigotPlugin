@@ -6,3 +6,5 @@ database:
   password: passy
 ghost:
   distance: 50
+shop:
+  revive: 1000

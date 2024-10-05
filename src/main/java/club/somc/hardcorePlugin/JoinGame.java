@@ -13,12 +13,14 @@ import java.util.logging.Logger;
  */
 public class JoinGame implements Listener {
 
-    private Database db;
-    private Logger logger;
+    private final Database db;
+    private final Logger logger;
+    private final Shop shop;
 
-    public JoinGame(Database db, Logger logger) {
+    public JoinGame(Database db, Logger logger, Shop shop) {
         this.db = db;
         this.logger = logger;
+        this.shop = shop;
     }
 
     @EventHandler
@@ -27,14 +29,19 @@ public class JoinGame implements Listener {
         HardcorePlayer hc = new HardcorePlayer(db, player);
 
         Boolean is_new;
+        Boolean is_alive;
         try {
             is_new = db.updatePlayer(player);
             hc.updatePlayerState();
+            is_alive = hc.isAlive();
         } catch (SQLException e) {
             logger.warning(e.getMessage());
             return;
         }
         logger.info("Is new? " + player.getName() + " - " + is_new);
+
+        // if the player is dead, lets show them the revive shop.
+        if (!is_alive) shop.openReviveShop(player);
 
         // todo - is the player new and should get a starting kit?
     }

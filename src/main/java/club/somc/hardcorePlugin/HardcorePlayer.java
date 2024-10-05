@@ -17,8 +17,11 @@ public class HardcorePlayer {
 
     public void updatePlayerState() throws SQLException {
 
-        // Make sure dead players are ghosts.
-        if (!isAlive()) player.setGameMode(GameMode.SPECTATOR);
+        // Ensure correct game mode.
+        if (isAlive())
+            player.setGameMode(GameMode.SURVIVAL);
+        else
+            player.setGameMode(GameMode.SPECTATOR);
     }
 
     public void died(String reason) throws SQLException {

@@ -1,7 +1,6 @@
 package club.somc.hardcorePlugin;
 
-import club.somc.hardcorePlugin.commands.GrantExtraLifeCommand;
-import club.somc.hardcorePlugin.commands.MarkEvilCommand;
+import club.somc.hardcorePlugin.shop.Shop;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -52,7 +51,7 @@ public final class HardcorePlugin extends JavaPlugin {
 
         getLogger().info("HardcorePlugin enabled");*/
 
-        Shop shop = new Shop(db, getLogger(), config.getConfigurationSection("shop"));
+        Shop shop = new Shop(db, getLogger(), config.getConfigurationSection("shop"), this);
         getCommand("shop").setExecutor(shop);
         getServer().getPluginManager().registerEvents(shop, this);
 

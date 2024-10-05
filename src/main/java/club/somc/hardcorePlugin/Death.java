@@ -1,17 +1,12 @@
 package club.somc.hardcorePlugin;
 
-import org.bukkit.GameMode;
-import org.bukkit.Material;
+import club.somc.hardcorePlugin.shop.Shop;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.logging.Logger;
@@ -60,7 +55,7 @@ public class Death implements Listener {
                     @Override
                     public void run() {
                         p.teleport(p.getLastDeathLocation());
-                        shop.openReviveShop(p);
+                        shop.openShop(p);
                     }
                 }, 5L);
             }

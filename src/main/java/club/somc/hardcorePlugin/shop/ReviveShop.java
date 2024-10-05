@@ -1,8 +1,9 @@
-package club.somc.hardcorePlugin;
+package club.somc.hardcorePlugin.shop;
 
+import club.somc.hardcorePlugin.Database;
+import club.somc.hardcorePlugin.HardcorePlayer;
 import org.bukkit.*;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -18,14 +19,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class Shop implements CommandExecutor, Listener {
+public class ReviveShop implements Listener {
 
     private final Database db;
     private final Logger logger;
     private final ConfigurationSection config;
     private final Location spawn;
 
-    public Shop(Database db, Logger logger, ConfigurationSection config) {
+    public ReviveShop(Database db, Logger logger, ConfigurationSection config) {
         this.db = db;
         this.logger = logger;
         this.config = config;
@@ -40,18 +41,7 @@ public class Shop implements CommandExecutor, Listener {
         this.spawn = _spawn;
     }
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player player)) {
-            return false;
-        }
-
-        //openCustomInventory((Player) sender);
-        openReviveShop(player);
-        return true;
-    }
-
-    public void openReviveShop(Player player) {
+    public void openShop(Player player) {
         HardcorePlayer hp = new HardcorePlayer(db, player);
 
         int wallet = 0;
@@ -146,5 +136,4 @@ public class Shop implements CommandExecutor, Listener {
 
         return location;
     }
-
 }

@@ -1,5 +1,6 @@
 package club.somc.hardcorePlugin;
 
+import club.somc.hardcorePlugin.shop.Shop;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -45,6 +46,6 @@ public class JoinGame implements Listener {
         logger.info("Is new? " + player.getName() + " - " + is_new);
 
         // if the player is dead, lets show them the revive shop.
-        if (!is_alive) shop.openReviveShop(player);
+        if (!is_alive) shop.openShop(player);
     }
 }

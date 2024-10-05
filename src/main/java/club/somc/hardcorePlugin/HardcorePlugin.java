@@ -39,7 +39,7 @@ public final class HardcorePlugin extends JavaPlugin {
             return;
         }
 
-        evilManager = new EvilManager(db);
+        /*evilManager = new EvilManager(db);
         lifeManager = new LifeManager(getServer(), db);
 
         getServer().getPluginManager().registerEvents(new EventListener(this, getLogger(),lifeManager,evilManager,db), this);
@@ -50,7 +50,10 @@ public final class HardcorePlugin extends JavaPlugin {
         getCommand("mark_evil").setExecutor(new MarkEvilCommand(getLogger(), evilManager));
         getCommand("mark_evil").setTabCompleter(new MarkEvilCommand(getLogger(), evilManager));
 
-        getLogger().info("HardcorePlugin enabled");
+        getLogger().info("HardcorePlugin enabled");*/
+
+        Ghost ghost = new Ghost(15, getLogger());
+        getServer().getPluginManager().registerEvents(ghost, this);
     }
 
     @Override

@@ -1,5 +1,5 @@
 name: HardcorePlugin
-version: '1.5.2-SNAPSHOT'
+version: '2.0.0-alpha'
 main: club.somc.hardcorePlugin.HardcorePlugin
 api-version: '1.21'
 commands:

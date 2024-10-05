@@ -93,7 +93,6 @@ public class Shop implements CommandExecutor, Listener {
                 if (hp.addToWallet(revive_cost*-1, "Spent " + revive_cost + " on revive.")) {
                     player.teleport(loc);
                     hp.revive("Purchased revive.");
-                    hp.updatePlayerState();
                 } else {
                     player.sendMessage(ChatColor.RED + "You don't have enough currency.");
                     return;
@@ -107,7 +106,6 @@ public class Shop implements CommandExecutor, Listener {
                 if (hp.addToWallet(revive_cost*-1, "Spent " + revive_cost + " on revive.")) {
                     player.teleport(loc);
                     hp.revive("Purchased revive.");
-                    hp.updatePlayerState();
                 } else {
                     player.sendMessage(ChatColor.RED + "You don't have enough currency.");
                     return;
@@ -117,7 +115,6 @@ public class Shop implements CommandExecutor, Listener {
                 if (hp.addToWallet(revive_cost*-1, "Spent " + revive_cost + " on revive.")) {
                     player.teleport(loc);
                     hp.revive("Purchased revive.");
-                    hp.updatePlayerState();
                 } else {
                     player.sendMessage(ChatColor.RED + "You don't have enough currency.");
                     return;

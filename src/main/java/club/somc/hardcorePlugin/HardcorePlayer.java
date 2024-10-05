@@ -1,7 +1,12 @@
 package club.somc.hardcorePlugin;
 
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.sql.SQLException;
 
@@ -38,6 +43,8 @@ public class HardcorePlayer {
                 Database.EventType.REVIVED,
                 reason
         );
+        this.updatePlayerState();
+        this.giveRespawnKit();
     }
 
     public boolean isAlive() throws SQLException {
@@ -61,6 +68,25 @@ public class HardcorePlayer {
         this.db.addToWallet(player.getUniqueId(), amount);
 
         return true;
+    }
+
+    public void giveRespawnKit() {
+        player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 1*60*20, 5));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 1*60*20, 5));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 30*20, 3));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 30*20, 3));
+
+        player.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 1*60*20, 100));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.MINING_FATIGUE, 1*60*20, 100));
+
+        player.getInventory().setItemInOffHand(new ItemStack(Material.ROTTEN_FLESH, 9));
+        player.getInventory().setItem(8, new ItemStack(Material.TORCH, 1));
+
+        player.getInventory().setItem(0, new ItemStack(Material.STICK, 1));
+        ItemMeta ws = player.getInventory().getItem(0).getItemMeta();
+        ws.setDisplayName("Pointy Stick");
+        ws.setEnchantmentGlintOverride(true);
+        player.getInventory().getItem(0).setItemMeta(ws);
     }
 
 

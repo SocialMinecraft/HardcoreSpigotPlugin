@@ -129,6 +129,58 @@ public class Database {
         return isAlive;
     }
 
+    public int getWallet(UUID playerUuid) throws SQLException {
+        String sql = """
+                SELECT 
+                    wallet
+                FROM
+                    players
+                WHERE
+                    player_uuid = ?
+                LIMIT 1
+                ;
+                """;
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setObject(1, playerUuid);
+        ResultSet resultSet = statement.executeQuery();
+        int wallet = 0;
+        while (resultSet.next()) {
+            wallet = resultSet.getInt(1);
+            break;
+        }
+        resultSet.close();
+        statement.close();
+
+        return wallet;
+    }
+
+    public int addToWallet(UUID playerUuid, int amount) throws SQLException {
+        String sql = """
+                UPDATE 
+                    players
+                SET
+                    wallet = wallet + ?
+                WHERE
+                    player_uuid = ?
+                RETURNING
+                    wallet
+                ;
+                """;
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setInt(1, amount);
+        statement.setObject(2, playerUuid);
+        ResultSet resultSet = statement.executeQuery();
+        int wallet = 0;
+        while (resultSet.next()) {
+            wallet = resultSet.getInt(1);
+            break;
+        }
+        resultSet.close();
+        statement.close();
+
+        return wallet;
+    }
+
 
 
     /* OLD CODE */

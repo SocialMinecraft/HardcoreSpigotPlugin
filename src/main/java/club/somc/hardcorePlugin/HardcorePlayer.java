@@ -44,5 +44,24 @@ public class HardcorePlayer {
         return this.db.isAlive(player.getUniqueId());
     }
 
+    public int getWallet() throws SQLException {
+        return this.db.getWallet(player.getUniqueId());
+    }
+
+    public boolean addToWallet(int amount, String description) throws SQLException {
+        if (this.getWallet() + amount < 0)
+            return false;
+
+        this.db.addEvent(
+                this.player,
+                Database.EventType.TRANSACTION,
+                description
+        );
+
+        this.db.addToWallet(player.getUniqueId(), amount);
+
+        return true;
+    }
+
 
 }

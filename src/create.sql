@@ -3,7 +3,8 @@ CREATE TABLE players (
      joined      TIMESTAMP WITH TIME ZONE DEFAULT current_timestamp NOT NULL,
      last_seen   TIMESTAMP WITH TIME ZONE DEFAULT current_timestamp NOT NULL,
      name        VARCHAR(17) NOT NULL DEFAULT 'Unknown',
-     playtime    INT NOT NULL DEFAULT 0
+     playtime    INT NOT NULL DEFAULT 0,
+     wallet      INT NOT NULL DEFAULT 0
 );
 
 CREATE TYPE event_type AS ENUM ('died', 'offense', 'bought', 'transaction', 'revived');
@@ -18,6 +19,8 @@ CREATE TABLE events (
     FOREIGN KEY (player_uuid) REFERENCES players(player_uuid)
 );
 
-CREATE TABLE item_type AS ENUM ('item', 'power', 'special');
+
+
+/*CREATE TABLE item_type AS ENUM ('item', 'power', 'special');*/
 
 /* should we do a transaction table ? or just keep current balance */

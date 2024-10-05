@@ -1,7 +1,6 @@
 package club.somc.hardcorePlugin;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,6 +13,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
@@ -23,11 +23,21 @@ public class Shop implements CommandExecutor, Listener {
     private final Database db;
     private final Logger logger;
     private final ConfigurationSection config;
+    private final Location spawn;
 
     public Shop(Database db, Logger logger, ConfigurationSection config) {
         this.db = db;
         this.logger = logger;
         this.config = config;
+
+        Location _spawn = Bukkit.getWorlds().get(0).getSpawnLocation();;
+        for (World w : Bukkit.getWorlds()) {
+            if (w.getEnvironment() == World.Environment.NORMAL) {
+                _spawn = w.getSpawnLocation();
+                break;
+            }
+        }
+        this.spawn = _spawn;
     }
 
     @Override
@@ -42,7 +52,17 @@ public class Shop implements CommandExecutor, Listener {
     }
 
     public void openReviveShop(Player player) {
-        Inventory inventory = Bukkit.createInventory(null, 27, "Revive Shop §6(Currency: XXX)");
+        HardcorePlayer hp = new HardcorePlayer(db, player);
+
+        int wallet = 0;
+        try {
+            wallet = hp.getWallet();
+        } catch (SQLException e) {
+            logger.warning(e.getMessage());
+            return;
+        }
+
+        Inventory inventory = Bukkit.createInventory(null, 27, "Revive Shop §6(Currency: "+wallet+")");
 
         inventory.setItem(11, createCustomItem(Material.GRASS_BLOCK, "§bRevive Spawn", "§6Cost: " + config.getInt("revive"), "§7Click to revive at spawn"));
         inventory.setItem(13, createCustomItem(Material.RED_BED, "§bRevive Bed", "§6Cost: " + config.getInt("revive"), "§7Click to revive at your bed."));
@@ -61,21 +81,52 @@ public class Shop implements CommandExecutor, Listener {
         event.setCancelled(true);
 
         Player player = (Player) event.getWhoClicked();
+        HardcorePlayer hp = new HardcorePlayer(db, player);
         ItemStack clickedItem = event.getCurrentItem();
 
         if (clickedItem == null || clickedItem.getType() == Material.AIR) return;
 
-        if (clickedItem.getType() == Material.GRASS_BLOCK) {
-            //player.getInventory().addItem(new ItemStack(Material.DIAMOND_SWORD));
-            //player.sendMessage("You received a diamond sword!");
-        } else if (clickedItem.getType() == Material.RED_BED) {
-            //player.setHealth(Math.min(player.getHealth() + 4, player.getMaxHealth()));
-            //player.sendMessage("You've been healed!");
-        } else if (clickedItem.getType() == Material.GOLDEN_APPLE) {
-            //player.teleport(player.getWorld().getHighestBlockAt(player.getLocation().add(Math.random() * 20 - 10, 0, Math.random() * 20 - 10)).getLocation().add(0, 1, 0));
-            //player.sendMessage("You've been teleported!");
-        } else if (clickedItem.getType() == Material.BARRIER) {
-            player.closeInventory();
+        int revive_cost = config.getInt("revive");
+        try {
+            if (clickedItem.getType() == Material.GRASS_BLOCK) {
+                Location loc = ensureSpawnSafety(spawn);
+                if (hp.addToWallet(revive_cost*-1, "Spent " + revive_cost + " on revive.")) {
+                    player.teleport(loc);
+                    hp.revive("Purchased revive.");
+                    hp.updatePlayerState();
+                } else {
+                    player.sendMessage(ChatColor.RED + "You don't have enough currency.");
+                    return;
+                }
+            } else if (clickedItem.getType() == Material.RED_BED) {
+                Location loc = player.getRespawnLocation();
+                if (loc == null) {
+                    player.sendMessage(ChatColor.RED + "No bed found.");
+                    return;
+                }
+                if (hp.addToWallet(revive_cost*-1, "Spent " + revive_cost + " on revive.")) {
+                    player.teleport(loc);
+                    hp.revive("Purchased revive.");
+                    hp.updatePlayerState();
+                } else {
+                    player.sendMessage(ChatColor.RED + "You don't have enough currency.");
+                    return;
+                }
+            } else if (clickedItem.getType() == Material.GOLDEN_APPLE) {
+                Location loc = player.getLocation();
+                if (hp.addToWallet(revive_cost*-1, "Spent " + revive_cost + " on revive.")) {
+                    player.teleport(loc);
+                    hp.revive("Purchased revive.");
+                    hp.updatePlayerState();
+                } else {
+                    player.sendMessage(ChatColor.RED + "You don't have enough currency.");
+                    return;
+                }
+            } else if (clickedItem.getType() == Material.BARRIER) {
+                player.closeInventory();
+            }
+        } catch (SQLException ex) {
+            logger.warning(ex.getMessage());
         }
     }
 
@@ -87,6 +138,16 @@ public class Shop implements CommandExecutor, Listener {
         meta.setLore(lore_list);
         item.setItemMeta(meta);
         return item;
+    }
+
+    private static Location ensureSpawnSafety(Location location) {
+        // Find the highest non-air block at the spawn coordinates
+        location.setY(location.getWorld().getHighestBlockYAt(location));
+
+        // Move up to ensure the player spawns above ground
+        location.add(0, 1, 0);
+
+        return location;
     }
 
 }

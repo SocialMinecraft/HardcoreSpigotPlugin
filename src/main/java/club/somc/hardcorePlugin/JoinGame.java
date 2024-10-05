@@ -16,11 +16,13 @@ public class JoinGame implements Listener {
     private final Database db;
     private final Logger logger;
     private final Shop shop;
+    private final int initalCurrency;
 
-    public JoinGame(Database db, Logger logger, Shop shop) {
+    public JoinGame(Database db, Logger logger, Shop shop, int initalCurrency) {
         this.db = db;
         this.logger = logger;
         this.shop = shop;
+        this.initalCurrency = initalCurrency;
     }
 
     @EventHandler
@@ -34,6 +36,8 @@ public class JoinGame implements Listener {
             is_new = db.updatePlayer(player);
             hc.updatePlayerState();
             is_alive = hc.isAlive();
+
+            if (is_new) hc.addToWallet(initalCurrency, initalCurrency + " starting currency received.");
         } catch (SQLException e) {
             logger.warning(e.getMessage());
             return;
@@ -42,7 +46,5 @@ public class JoinGame implements Listener {
 
         // if the player is dead, lets show them the revive shop.
         if (!is_alive) shop.openReviveShop(player);
-
-        // todo - is the player new and should get a starting kit?
     }
 }

@@ -59,7 +59,7 @@ public final class HardcorePlugin extends JavaPlugin {
         Ghost ghost = new Ghost(config.getInt("ghost.distance", 50), db, getLogger());
         getServer().getPluginManager().registerEvents(ghost, this);
 
-        JoinGame join = new JoinGame(db, getLogger(), shop);
+        JoinGame join = new JoinGame(db, getLogger(), shop, config.getInt("starting_currency"));
         getServer().getPluginManager().registerEvents(join, this);
 
         LeaveGame leave = new LeaveGame(db, getLogger());

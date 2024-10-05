@@ -9,3 +9,15 @@ ghost:
 starting_currency: 3000
 shop:
   revive: 1000
+  items:
+    dirt:
+      material: DIRT
+      amount: 64
+      cost: 25
+    fire_pot:
+      material: POTION
+      amount: 1
+      cost: 300
+      effectType: FIRE_RESISTANCE
+      duration: 300
+      amplifier: 1

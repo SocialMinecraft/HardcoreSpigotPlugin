@@ -7,7 +7,7 @@ database:
 ghost:
   distance: 50
 daily:
-  reset_utc: 21:00:00 # 11PM UTC or 7PM ET/EDT
+  reset_utc: "21:00:00" # 11PM UTC or 7PM ET/EDT
   currency: 100
   vip_currency: 50
 offense_time: 21600

@@ -129,6 +129,35 @@ public class Database {
         return isAlive;
     }
 
+    public int lastOffensePlaytime(UUID playerUuid) throws SQLException {
+        String sql = """
+                SELECT 
+                    playtime
+                FROM
+                    events
+                WHERE
+                    player_uuid = ? AND
+                    type = 'offense'::event_type
+                ORDER BY 
+                    playtime DESC
+                LIMIT 1
+                ;
+                """;
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setObject(1, playerUuid);
+        ResultSet resultSet = statement.executeQuery();
+
+        int playtime = -1;
+        while (resultSet.next()) {
+            playtime = resultSet.getInt(1);
+            break;
+        }
+        resultSet.close();
+        statement.close();
+
+        return playtime;
+    }
+
     public int getWallet(UUID playerUuid) throws SQLException {
         String sql = """
                 SELECT 

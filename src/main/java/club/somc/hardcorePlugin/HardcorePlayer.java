@@ -56,6 +56,10 @@ public class HardcorePlayer {
         this.updatePlayerState();
     }
 
+    public int lastOffense() throws SQLException {
+        return db.lastOffensePlaytime(this.player.getUniqueId());
+    }
+
     public boolean isAlive() throws SQLException {
         return this.db.isAlive(player.getUniqueId());
     }

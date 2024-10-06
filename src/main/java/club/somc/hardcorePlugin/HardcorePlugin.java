@@ -70,6 +70,9 @@ public final class HardcorePlugin extends JavaPlugin {
 
         PlayerKiller playerKiller = new PlayerKiller(db, getLogger());
         getServer().getPluginManager().registerEvents(playerKiller, this);
+
+        OffenseManager offenseManager = new OffenseManager(db, getLogger(), config.getInt("offense_time", 3600), this);
+        getServer().getPluginManager().registerEvents(offenseManager, this);
     }
 
     @Override

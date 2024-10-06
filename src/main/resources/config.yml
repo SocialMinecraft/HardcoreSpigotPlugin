@@ -6,6 +6,7 @@ database:
   password: passy
 ghost:
   distance: 50
+offense_time: 21600
 starting_currency: 3000
 shop:
   revive: 1000

@@ -1,6 +1,7 @@
-package club.somc.hardcorePlugin;
+package club.somc.hardcorePlugin.events;
 
-import org.bukkit.GameMode;
+import club.somc.hardcorePlugin.Database;
+import club.somc.hardcorePlugin.HardcorePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

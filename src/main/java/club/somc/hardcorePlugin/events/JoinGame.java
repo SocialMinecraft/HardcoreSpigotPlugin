@@ -1,5 +1,7 @@
-package club.somc.hardcorePlugin;
+package club.somc.hardcorePlugin.events;
 
+import club.somc.hardcorePlugin.Database;
+import club.somc.hardcorePlugin.HardcorePlayer;
 import club.somc.hardcorePlugin.shop.Shop;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

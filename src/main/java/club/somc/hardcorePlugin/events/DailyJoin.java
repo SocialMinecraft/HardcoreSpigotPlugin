@@ -1,15 +1,14 @@
-package club.somc.hardcorePlugin;
+package club.somc.hardcorePlugin.events;
 
-import org.bukkit.ChatColor;
+import club.somc.hardcorePlugin.Database;
+import club.somc.hardcorePlugin.HardcorePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import java.net.http.WebSocket;
 import java.sql.SQLException;
 import java.time.*;
-import java.time.format.DateTimeFormatter;
 import java.util.logging.Logger;
 
 /**
@@ -65,19 +64,5 @@ public class DailyJoin implements Listener {
         }
 
     }
-
-    /*public static boolean isAfterReset(String timeString) {
-        / *DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-        LocalTime specifiedTime = LocalTime.parse(timeString, formatter);
-        LocalTime currentTime = LocalTime.now();
-
-        return currentTime.isAfter(specifiedTime);* /
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-        OffsetTime specifiedTime = OffsetTime.parse(timeString + "Z", DateTimeFormatter.ISO_OFFSET_TIME);
-        OffsetTime currentTimeUTC = OffsetTime.now(ZoneOffset.UTC);
-
-        return currentTimeUTC.isAfter(specifiedTime);
-    }*/
 
 }

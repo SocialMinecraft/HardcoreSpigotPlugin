@@ -3,6 +3,7 @@ package club.somc.hardcorePlugin.events;
 import club.somc.hardcorePlugin.Database;
 import club.somc.hardcorePlugin.HardcorePlayer;
 import club.somc.hardcorePlugin.shop.Shop;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,12 +21,14 @@ public class JoinGame implements Listener {
     private final Logger logger;
     private final Shop shop;
     private final int initalCurrency;
+    private final int reviveCost;
 
-    public JoinGame(Database db, Logger logger, Shop shop, int initalCurrency) {
+    public JoinGame(Database db, Logger logger, Shop shop, int initalCurrency, int reviveCost) {
         this.db = db;
         this.logger = logger;
         this.shop = shop;
         this.initalCurrency = initalCurrency;
+        this.reviveCost = reviveCost;
     }
 
     @EventHandler
@@ -41,6 +44,10 @@ public class JoinGame implements Listener {
             is_alive = hc.isAlive();
 
             if (is_new) hc.addToWallet(initalCurrency, initalCurrency + " starting currency received.");
+
+            player.sendMessage(ChatColor.GOLD + "You have " + hc.getWallet()
+                    + " currency. Use /shop to spend.");
+            player.sendMessage(ChatColor.DARK_PURPLE + "Current revive cost: " + reviveCost);
         } catch (SQLException e) {
             logger.warning(e.getMessage());
             return;

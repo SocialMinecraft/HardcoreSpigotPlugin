@@ -6,6 +6,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.SQLException;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public final class HardcorePlugin extends JavaPlugin {
 
@@ -71,8 +73,15 @@ public final class HardcorePlugin extends JavaPlugin {
         PlayerKiller playerKiller = new PlayerKiller(db, getLogger());
         getServer().getPluginManager().registerEvents(playerKiller, this);
 
-        OffenseManager offenseManager = new OffenseManager(db, getLogger(), config.getInt("offense_time", 3600), this);
+        OffenseManager offenseManager = new OffenseManager(db, getLogger(),
+                config.getInt("offense_time", 3600), this);
         getServer().getPluginManager().registerEvents(offenseManager, this);
+
+        DailyJoin dailyJoin = new DailyJoin(db, getLogger(),
+                config.getInt("daily.currency", 75),
+                config.getInt("daily.currency", 50),
+                config.getString("daily.reset_utc", "00:00:00"));
+        getServer().getPluginManager().registerEvents(dailyJoin, this);
     }
 
     @Override

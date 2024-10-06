@@ -14,7 +14,8 @@ public class Database {
         DIED("died"),
         REVIVED("revived"),
         OFFENSE("offense"),
-        TRANSACTION("transaction");
+        TRANSACTION("transaction"),
+        DAILY("daily");
 
         private final String name;
 

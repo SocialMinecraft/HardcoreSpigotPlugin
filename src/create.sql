@@ -7,7 +7,7 @@ CREATE TABLE players (
      wallet      INT NOT NULL DEFAULT 0
 );
 
-CREATE TYPE event_type AS ENUM ('died', 'offense', 'bought', 'transaction', 'revived');
+CREATE TYPE event_type AS ENUM ('died', 'offense', 'bought', 'transaction', 'revived', 'daily');
 
 CREATE TABLE events (
     id          BIGSERIAL PRIMARY KEY,

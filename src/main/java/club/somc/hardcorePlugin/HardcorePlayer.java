@@ -106,7 +106,8 @@ public class HardcorePlayer {
 
         this.db.addToWallet(player.getUniqueId(), amount);
 
-        player.sendMessage((amount > 0 ? ChatColor.GREEN : ChatColor.RED) + description);
+        player.sendMessage((amount > 0 ? ChatColor.GREEN : ChatColor.RED) + description
+                + " (Balance: " + this.getWallet() + ")");
 
         return true;
     }

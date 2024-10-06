@@ -71,7 +71,11 @@ public class HardcorePlayer {
                 Database.EventType.DAILY,
                 reason
         );
-        player.sendMessage(ChatColor.GREEN + reason);
+
+        //player.sendMessage(ChatColor.GREEN + reason);
+        // they already get a message from the transaction.
+
+        // todo - really should send them a you have logged in for X days!
     }
 
     public OffsetDateTime lastDaily() throws SQLException {
@@ -101,6 +105,8 @@ public class HardcorePlayer {
         );
 
         this.db.addToWallet(player.getUniqueId(), amount);
+
+        player.sendMessage((amount > 0 ? ChatColor.GREEN : ChatColor.RED) + description);
 
         return true;
     }

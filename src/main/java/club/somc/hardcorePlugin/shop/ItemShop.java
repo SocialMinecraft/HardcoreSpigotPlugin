@@ -151,7 +151,7 @@ public class ItemShop implements Listener {
             try {
                 if (hp.addToWallet(item.getCost()*-1, "Spent " + item.getCost() + " on " + item.toString())) {
                     player.getInventory().addItem(item.getItem(false));
-                    player.sendMessage("You purchased: " + item.toString());
+                    player.sendMessage(ChatColor.GREEN + "You received: " + item.toString());
                 } else {
                     player.sendMessage(ChatColor.RED + "You don't have enough currency.");
                 }

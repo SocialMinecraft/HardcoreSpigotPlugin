@@ -7,6 +7,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.SQLException;
 import java.time.LocalTime;
+import java.time.OffsetTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
 public final class HardcorePlugin extends JavaPlugin {
@@ -77,10 +79,14 @@ public final class HardcorePlugin extends JavaPlugin {
                 config.getInt("offense_time", 3600), this);
         getServer().getPluginManager().registerEvents(offenseManager, this);
 
+        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        //OffsetTime resetTime = OffsetTime.parse(config.getString("daily.reset_utc", "00:00:00") + "Z", formatter);
+        OffsetTime resetTime = OffsetTime.parse(config.getString("daily.reset_utc", "00:00:00") + "Z");
         DailyJoin dailyJoin = new DailyJoin(db, getLogger(),
                 config.getInt("daily.currency", 75),
                 config.getInt("daily.currency", 50),
-                config.getString("daily.reset_utc", "00:00:00"));
+                resetTime
+                );
         getServer().getPluginManager().registerEvents(dailyJoin, this);
     }
 

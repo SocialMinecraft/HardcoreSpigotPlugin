@@ -4,6 +4,7 @@ import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 
 import java.sql.*;
+import java.time.OffsetDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
@@ -157,6 +158,36 @@ public class Database {
         statement.close();
 
         return playtime;
+    }
+
+    public OffsetDateTime lastDaily(UUID playerUuid) throws SQLException {
+        String sql = """
+                SELECT 
+                    stamp
+                FROM
+                    events
+                WHERE
+                    player_uuid = ? AND
+                    type = 'daily'::event_type
+                ORDER BY 
+                    stamp DESC
+                LIMIT 1
+                ;
+                """;
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setObject(1, playerUuid);
+        ResultSet resultSet = statement.executeQuery();
+
+
+        OffsetDateTime lastDaily = null;
+        while (resultSet.next()) {
+            lastDaily = resultSet.getObject(1, OffsetDateTime.class);
+            break;
+        }
+        resultSet.close();
+        statement.close();
+
+        return lastDaily;
     }
 
     public int getWallet(UUID playerUuid) throws SQLException {

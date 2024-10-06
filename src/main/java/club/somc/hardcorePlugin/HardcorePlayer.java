@@ -1,5 +1,6 @@
 package club.somc.hardcorePlugin;
 
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -9,6 +10,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.sql.SQLException;
+import java.time.OffsetDateTime;
 
 public class HardcorePlayer {
 
@@ -54,6 +56,26 @@ public class HardcorePlayer {
                 reason
         );
         this.updatePlayerState();
+    }
+
+    public void giveDaily(int amount, int vip_amount) throws SQLException {
+        int total_amount = amount+vip_amount;
+        String reason = "Daily Login" + (vip_amount > 0 ? " with VIP Bonus" : "")
+                + " of " + total_amount  + " received!";
+        this.addToWallet(
+                total_amount,
+                reason
+        );
+        this.db.addEvent(
+                this.player,
+                Database.EventType.DAILY,
+                reason
+        );
+        player.sendMessage(ChatColor.GREEN + reason);
+    }
+
+    public OffsetDateTime lastDaily() throws SQLException {
+        return db.lastDaily(this.player.getUniqueId());
     }
 
     public int lastOffense() throws SQLException {

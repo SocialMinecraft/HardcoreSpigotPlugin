@@ -14,10 +14,89 @@ shop:
       material: DIRT
       amount: 64
       cost: 25
-    fire_pot:
+    stone:
+      material: STONE
+      amount: 64
+      cost: 100
+    oak_log:
+      material: OAK_LOG
+      amount: 64
+      cost: 100
+    iron_ingot:
+      material: IRON_INGOT
+      amount: 64
+      cost: 200
+    golden_apple:
+      material: GOLDEN_APPLE
+      amount: 1
+      cost: 100
+
+    creeper_spawn_egg:
+      material: CREEPER_SPAWN_EGG
+      amount: 1
+      cost: 100
+    zombie_spawn_egg:
+      material: ZOMBIE_SPAWN_EGG
+      amount: 1
+      cost: 100
+    villager_spawn_egg:
+      material: VILLAGER_SPAWN_EGG
+      amount: 1
+      cost: 100
+
+    fire_resistance_pot:
       material: POTION
       amount: 1
       cost: 300
       effectType: FIRE_RESISTANCE
       duration: 300
-      amplifier: 1
+      amplifier: 0
+    resistance_pot:
+      material: POTION
+      amount: 1
+      cost: 300
+      effectType: RESISTANCE
+      duration: 300
+      amplifier: 0
+    invisibility_pot:
+      material: POTION
+      amount: 1
+      cost: 300
+      effectType: INVISIBILITY
+      duration: 300
+      amplifier: 0
+    speed_pot:
+      material: POTION
+      amount: 1
+      cost: 300
+      effectType: SPEED
+      duration: 200
+      amplifier: 0
+    night_pot:
+      material: POTION
+      amount: 1
+      cost: 200
+      effectType: NIGHT_VISION
+      duration: 300
+      amplifier: 0
+    slow_falling_pot:
+      material: POTION
+      amount: 1
+      cost: 200
+      effectType: SLOW_FALLING
+      duration: 300
+      amplifier: 0
+    strength_falling_pot:
+      material: POTION
+      amount: 1
+      cost: 200
+      effectType: STRENGTH
+      duration: 300
+      amplifier: 0
+    water_breathing_pot:
+      material: POTION
+      amount: 1
+      cost: 200
+      effectType: WATER_BREATHING
+      duration: 300
+      amplifier: 0

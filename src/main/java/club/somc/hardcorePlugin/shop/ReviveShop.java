@@ -23,11 +23,13 @@ public class ReviveShop implements Listener {
     private final Logger logger;
     private final ConfigurationSection config;
     private final Location spawn;
+    private final Shop shop;
 
-    public ReviveShop(Database db, Logger logger, ConfigurationSection config) {
+    public ReviveShop(Database db, Logger logger, ConfigurationSection config, Shop shop) {
         this.db = db;
         this.logger = logger;
         this.config = config;
+        this.shop = shop;
 
         Location _spawn = Bukkit.getWorlds().get(0).getSpawnLocation();;
         for (World w : Bukkit.getWorlds()) {
@@ -81,6 +83,7 @@ public class ReviveShop implements Listener {
                 if (hp.addToWallet(revive_cost*-1, "Spent " + revive_cost + " on revive.")) {
                     player.teleport(loc);
                     hp.revive("Purchased revive.");
+                    shop.giveBook(player);
                 } else {
                     player.sendMessage(ChatColor.RED + "You don't have enough currency.");
                     return;
@@ -94,6 +97,7 @@ public class ReviveShop implements Listener {
                 if (hp.addToWallet(revive_cost*-1, "Spent " + revive_cost + " on revive.")) {
                     player.teleport(loc);
                     hp.revive("Purchased revive.");
+                    shop.giveBook(player);
                 } else {
                     player.sendMessage(ChatColor.RED + "You don't have enough currency.");
                     return;
@@ -103,6 +107,7 @@ public class ReviveShop implements Listener {
                 if (hp.addToWallet(revive_cost*-1, "Spent " + revive_cost + " on revive.")) {
                     player.teleport(loc);
                     hp.revive("Purchased revive.");
+                    shop.giveBook(player);
                 } else {
                     player.sendMessage(ChatColor.RED + "You don't have enough currency.");
                     return;

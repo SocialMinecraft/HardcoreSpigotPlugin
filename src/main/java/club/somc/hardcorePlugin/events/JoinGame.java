@@ -43,7 +43,10 @@ public class JoinGame implements Listener {
             hc.updatePlayerState();
             is_alive = hc.isAlive();
 
-            if (is_new) hc.addToWallet(initalCurrency, initalCurrency + " starting currency received.");
+            if (is_new) {
+                hc.addToWallet(initalCurrency, initalCurrency + " starting currency received.");
+                shop.giveBook(player);
+            }
 
             player.sendMessage(ChatColor.GOLD + "You have " + hc.getWallet()
                     + " currency. Use /shop to spend.");

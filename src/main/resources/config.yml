@@ -15,6 +15,10 @@ starting_currency: 3000
 shop:
   revive: 1000
   items:
+    baked_potato:
+      material: BAKED_POTATO
+      amount: 16
+      cost: 25
     dirt:
       material: DIRT
       amount: 64

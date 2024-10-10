@@ -2,6 +2,7 @@ package club.somc.hardcorePlugin.shop;
 
 import club.somc.hardcorePlugin.Database;
 import club.somc.hardcorePlugin.HardcorePlayer;
+import club.somc.hardcorePlugin.items.Coin;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -27,50 +28,32 @@ import java.util.logging.Logger;
 public class ItemShop implements Listener {
 
     private static class ShopItem {
-        private final Material material;
+
         private final int cost;
-        private final int amount;
+        private ItemStack item;
 
-        private final PotionEffectType effectType;
-        private final int duration;
-        private final int amplifier;
-
-        public ShopItem(Material material, int cost, int amount) {
-            this.material = material;
+        public ShopItem(ItemStack itemStack, int cost) {
+            this.item = itemStack;
             this.cost = cost;
-            this.amount = amount;
-
-            this.effectType = null;
-            this.duration = 0;
-            this.amplifier = 0;
         }
 
         public ShopItem(ConfigurationSection item) {
-            this.material = Material.valueOf(item.getString("material"));
             this.cost = item.getInt("cost");
-            this.amount = item.getInt("amount");
-
-            if (this.material == Material.POTION) {
-                this.effectType = PotionEffectType.getByName(item.getString("effectType"));
-                this.duration = item.getInt("duration");
-                this.amplifier = item.getInt("amplifier");
-            } else {
-                this.effectType = null;
-                this.duration = 0;
-                this.amplifier = 0;
-            }
+            this.item = configToItemStack(item);
         }
 
-        public ItemStack getItem(boolean shop) {
-            ItemStack item = new ItemStack(this.material, this.amount);
+        private ItemStack configToItemStack(ConfigurationSection section) {
+            Material material = Material.getMaterial(section.getString("material"));
+            int amount = section.getInt("amount");
+
+            ItemStack item = new ItemStack(material, amount);
             ItemMeta meta = item.getItemMeta();
 
-            if (shop) {
-                List<String> lore_list = Arrays.asList("§6Cost: " + this.cost, "§7Click to buy.");
-                meta.setLore(lore_list);
-            }
+            if (material == Material.POTION) {
+                PotionEffectType effectType = PotionEffectType.getByName(section.getString("effectType"));
+                int duration = section.getInt("duration");
+                int amplifier = section.getInt("amplifier");
 
-            if (this.effectType != null) {
                 PotionMeta potionMeta = (PotionMeta) meta;
                 potionMeta.addCustomEffect(new PotionEffect(effectType, duration * 20, amplifier), true);
                 item.setItemMeta(potionMeta);
@@ -81,13 +64,30 @@ public class ItemShop implements Listener {
             return item;
         }
 
+        public ItemStack getItemShop() {
+            ItemStack re = this.item.clone();
+            ItemMeta meta = re.getItemMeta();
+
+            List<String> lore_list = Arrays.asList("§6Cost: " + this.cost, "§7Click to buy.");
+            meta.setLore(lore_list);
+            re.setItemMeta(meta);
+
+            return re;
+        }
+
+
+
+        public ItemStack getItem() {
+            return this.item.clone();
+        }
+
         public int getCost() {
             return cost;
         }
 
         @Override
         public String toString() {
-            return material.toString();
+            return this.item.getType().toString();
         }
     }
 
@@ -119,7 +119,7 @@ public class ItemShop implements Listener {
         Inventory inventory = Bukkit.createInventory(null, 27, "Item Shop §6(Currency: "+wallet+")");
 
         for (Map.Entry<Integer, ShopItem> entry : shopItems.entrySet()) {
-            inventory.setItem(entry.getKey(), entry.getValue().getItem(true));
+            inventory.setItem(entry.getKey(), entry.getValue().getItemShop());
         }
 
         //inventory.setItem(26, createCustomItem(Material.BARRIER, "§bClose", "§7Close the shop."));
@@ -150,7 +150,7 @@ public class ItemShop implements Listener {
 
             try {
                 if (hp.addToWallet(item.getCost()*-1, "Spent " + item.getCost() + " on " + item.toString())) {
-                    player.getInventory().addItem(item.getItem(false));
+                    player.getInventory().addItem(item.getItem());
                     player.sendMessage(ChatColor.GREEN + "You received: " + item.toString());
                 } else {
                     player.sendMessage(ChatColor.RED + "You don't have enough currency.");
@@ -171,6 +171,13 @@ public class ItemShop implements Listener {
     private void loadShopItems() {
         ConfigurationSection itemsSection = config.getConfigurationSection("items");
         int slot = 0;
+
+        // Add coin to shop
+        {
+            shopItems.put(slot, new ShopItem(new Coin(), 100));
+            slot++;
+        }
+
         if (itemsSection != null) {
             for (String key : itemsSection.getKeys(false)) {
                 ConfigurationSection itemSection = itemsSection.getConfigurationSection(key);

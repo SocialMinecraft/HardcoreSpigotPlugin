@@ -71,6 +71,9 @@ public final class HardcorePlugin extends JavaPlugin {
                 );
         getServer().getPluginManager().registerEvents(dailyJoin, this);
 
+        CoinUsed coinUsed = new CoinUsed(db, getLogger());
+        getServer().getPluginManager().registerEvents(coinUsed, this);
+
         getLogger().info("HardcorePlugin enabled");
     }
 

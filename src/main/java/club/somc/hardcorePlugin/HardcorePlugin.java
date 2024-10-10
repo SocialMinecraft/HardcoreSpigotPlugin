@@ -74,6 +74,10 @@ public final class HardcorePlugin extends JavaPlugin {
         CoinUsed coinUsed = new CoinUsed(db, getLogger());
         getServer().getPluginManager().registerEvents(coinUsed, this);
 
+        float coinChance = config.getInt("loot.coin_chance", 30)/100f;
+        LootGenerate lootGenerate = new LootGenerate(coinChance);
+        getServer().getPluginManager().registerEvents(lootGenerate, this);
+
         getLogger().info("HardcorePlugin enabled");
     }
 

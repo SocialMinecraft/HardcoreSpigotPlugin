@@ -4,6 +4,8 @@ database:
   database: hardcore # name of your database. A database server can contain multiple databases
   user: username
   password: passy
+loot:
+  coin_chance: 30 # between 0 or 100
 ghost:
   distance: 50
 daily:

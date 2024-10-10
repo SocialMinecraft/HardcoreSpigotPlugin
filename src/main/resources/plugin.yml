@@ -6,6 +6,10 @@ commands:
   shop:
     description: Purchase items and upgrades.
     usage: /<command>
+  give_currency:
+    description: Will give a player currency.
+    usage: /<command> player amount reason
+    permission: hardcore.admin
   mark_evil:
     description: Will mark a player as evil.
     usage: /<command> player reason

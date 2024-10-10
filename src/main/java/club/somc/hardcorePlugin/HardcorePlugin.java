@@ -1,5 +1,6 @@
 package club.somc.hardcorePlugin;
 
+import club.somc.hardcorePlugin.commands.GiveCurrency;
 import club.somc.hardcorePlugin.events.*;
 import club.somc.hardcorePlugin.shop.Shop;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -77,6 +78,10 @@ public final class HardcorePlugin extends JavaPlugin {
         float coinChance = config.getInt("loot.coin_chance", 30)/100f;
         LootGenerate lootGenerate = new LootGenerate(coinChance);
         getServer().getPluginManager().registerEvents(lootGenerate, this);
+
+        GiveCurrency giveCurrency = new GiveCurrency(db, getLogger());
+        getCommand("give_currency").setExecutor(giveCurrency);
+        getCommand("give_currency").setTabCompleter(giveCurrency);
 
         getLogger().info("HardcorePlugin enabled");
     }

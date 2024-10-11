@@ -1,6 +1,7 @@
 package club.somc.hardcorePlugin.events;
 
 import club.somc.hardcorePlugin.items.Coin;
+import club.somc.hardcorePlugin.items.GoldCoin;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.LootGenerateEvent;
@@ -36,7 +37,7 @@ public class LootGenerate implements Listener {
             }
 
             //int coins = random.nextInt(maxCoins - minCoins + 1) + minCoins;
-            event.getLoot().add(new Coin(coins));
+            event.getLoot().add(new GoldCoin(coins));
         }
 
     }

@@ -2,9 +2,8 @@ package club.somc.hardcorePlugin.events;
 
 import club.somc.hardcorePlugin.Database;
 import club.somc.hardcorePlugin.HardcorePlayer;
-import club.somc.hardcorePlugin.items.Coin;
+import club.somc.hardcorePlugin.items.*;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -31,26 +30,42 @@ public class CoinUsed implements Listener {
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             ItemStack item = event.getItem();
             if (item != null && item.getType() == Material.PLAYER_HEAD) {
-                if (Coin.isCoin(item)) {
-                    Player player = event.getPlayer();
-                    HardcorePlayer hardcorePlayer = new HardcorePlayer(database, player);
 
-                    try {
-                        hardcorePlayer.addToWallet(100, "Used Coin");
-                    } catch (SQLException e) {
-                        logger.warning(e.getMessage());
-                        return;
-                    }
+                Player player = event.getPlayer();
+                HardcorePlayer hardcorePlayer = new HardcorePlayer(database, player);
 
-                    if (item.getAmount() > 1) {
-                        item.setAmount(item.getAmount() - 1);
-                    } else {
-                        player.getInventory().remove(item);
-                    }
-
+                if (CopperCoin.is(item)) {
+                    useCoin(hardcorePlayer, item, new CopperCoin());
+                    event.setCancelled(true);
+                } else if (SilverCoin.is(item)) {
+                    useCoin(hardcorePlayer, item, new SilverCoin());
+                    event.setCancelled(true);
+                } else if (ElectrumCoin.is(item)) {
+                    useCoin(hardcorePlayer, item, new ElectrumCoin());
+                    event.setCancelled(true);
+                } else if (GoldCoin.is(item)) {
+                    useCoin(hardcorePlayer, item, new GoldCoin());
+                    event.setCancelled(true);
+                } else if (PlatinumCoin.is(item)) {
+                    useCoin(hardcorePlayer, item, new PlatinumCoin());
                     event.setCancelled(true);
                 }
             }
+        }
+    }
+
+    private void useCoin(HardcorePlayer player,  ItemStack item, Coin coin) {
+        try {
+            player.addToWallet(coin.getValue(), "Used " + coin.getName());
+        } catch (SQLException e) {
+            logger.warning(e.getMessage());
+            return;
+        }
+
+        if (item.getAmount() > 1) {
+            item.setAmount(item.getAmount() - 1);
+        } else {
+            player.getPlayer().getInventory().remove(item);
         }
     }
 }

@@ -2,7 +2,7 @@ package club.somc.hardcorePlugin.shop;
 
 import club.somc.hardcorePlugin.Database;
 import club.somc.hardcorePlugin.HardcorePlayer;
-import club.somc.hardcorePlugin.items.Coin;
+import club.somc.hardcorePlugin.items.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -116,7 +116,7 @@ public class ItemShop implements Listener {
             return;
         }
 
-        Inventory inventory = Bukkit.createInventory(null, 27, "Item Shop §6(Currency: "+wallet+")");
+        Inventory inventory = Bukkit.createInventory(null, 9*4, "Item Shop §6(Currency: "+wallet+")");
 
         for (Map.Entry<Integer, ShopItem> entry : shopItems.entrySet()) {
             inventory.setItem(entry.getKey(), entry.getValue().getItemShop());
@@ -169,12 +169,28 @@ public class ItemShop implements Listener {
 
         // Add coin to shop
         {
-            shopItems.put(slot, new ShopItem(new Coin(), 100));
+            CopperCoin cp = new CopperCoin();
+            shopItems.put(slot, new ShopItem(cp, cp.getValue()));
             slot++;
 
-            shopItems.put(slot, new ShopItem(new Coin(10), 1000));
+            SilverCoin sp = new SilverCoin();
+            shopItems.put(slot, new ShopItem(sp, sp.getValue()));
+            slot++;
+
+            ElectrumCoin ep = new ElectrumCoin();
+            shopItems.put(slot, new ShopItem(ep, ep.getValue()));
+            slot++;
+
+            GoldCoin gp = new GoldCoin();
+            shopItems.put(slot, new ShopItem(gp, gp.getValue()));
+            slot++;
+
+            PlatinumCoin pp = new PlatinumCoin();
+            shopItems.put(slot, new ShopItem(pp, pp.getValue()));
             slot++;
         }
+
+        slot = 9;
 
         if (itemsSection != null) {
             for (String key : itemsSection.getKeys(false)) {

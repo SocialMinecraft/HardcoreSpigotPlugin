@@ -48,7 +48,7 @@ public class ReviveShop implements Listener {
 
         public void summon(Location location) {
             World world = location.getWorld();
-            world.spawnEntity(location, EntityType.WARDEN);
+            world.spawnEntity(location, this.entityType);
         }
 
         public int getCost() {
@@ -98,7 +98,7 @@ public class ReviveShop implements Listener {
             return;
         }
 
-        Inventory inventory = Bukkit.createInventory(null, 27, "Revive Shop §6(Currency: "+wallet+")");
+        Inventory inventory = Bukkit.createInventory(null, 36, "Revive Shop §6(Currency: "+wallet+")");
 
         inventory.setItem(11, createCustomItem(Material.GRASS_BLOCK, "§bRevive Spawn", "§6Cost: " + config.getInt("revive"), "§7Click to revive at spawn"));
         inventory.setItem(13, createCustomItem(Material.RED_BED, "§bRevive Bed", "§6Cost: " + config.getInt("revive"), "§7Click to revive at your bed."));
@@ -164,6 +164,21 @@ public class ReviveShop implements Listener {
                 }
             } else if (clickedItem.getType() == Material.BARRIER) {
                 player.closeInventory();
+            } else if (shopItems.containsKey(event.getRawSlot())) {
+                    ShopSummon summon = shopItems.get(event.getRawSlot());
+
+                    try {
+                        if (hp.addToWallet(summon.getCost()*-1, "Spent " + summon.getCost() + " on " + summon.toString())) {
+                            summon.summon(player.getLocation());
+                            player.sendMessage(ChatColor.GREEN + "You summon: " + summon.toString());
+                        } else {
+                            player.sendMessage(ChatColor.RED + "You don't have enough currency.");
+                        }
+                    } catch (SQLException ex) {
+                        logger.warning(ex.getMessage());
+                    }
+
+                    player.closeInventory();
             }
         } catch (SQLException ex) {
             logger.warning(ex.getMessage());
@@ -192,7 +207,7 @@ public class ReviveShop implements Listener {
 
     private void loadReviveShopSummons() {
         ConfigurationSection itemsSection = config.getConfigurationSection("revive_summons");
-        int slot = 18;
+        int slot = 27;
 
         if (itemsSection != null) {
             for (String key : itemsSection.getKeys(false)) {

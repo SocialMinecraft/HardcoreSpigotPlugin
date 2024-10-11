@@ -19,8 +19,11 @@ CREATE TABLE events (
     FOREIGN KEY (player_uuid) REFERENCES players(player_uuid)
 );
 
+CREATE TABLE powers (
+    player_uuid UUID NOT NULL,
+    effect      VARCHAR(30) NOT NULL,
+    level       INT NOT NULL,
 
-
-/*CREATE TABLE item_type AS ENUM ('item', 'power', 'special');*/
-
-/* should we do a transaction table ? or just keep current balance */
+    FOREIGN KEY (player_uuid) REFERENCES players(player_uuid),
+    PRIMARY KEY (player_uuid, effect)
+);

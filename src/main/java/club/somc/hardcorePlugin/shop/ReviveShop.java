@@ -153,8 +153,10 @@ public class ReviveShop implements Listener {
                 try {
                     if (hp.addToWallet(summon.getCost()*-1, "Spent " + summon.getCost() + " on " + summon.toString())) {
                         summon.summon(player.getLocation());
+                        player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
                         player.sendMessage(ChatColor.GREEN + "You summon: " + summon.toString());
                     } else {
+                        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0f, 0.5f);
                         player.sendMessage(ChatColor.RED + "You don't have enough currency.");
                     }
                 } catch (SQLException ex) {
@@ -191,9 +193,11 @@ public class ReviveShop implements Listener {
             int revive_cost = config.getInt("revive");
             if (player.addToWallet(revive_cost * -1, "Spent " + revive_cost + " on revive.")) {
                 player.getPlayer().teleport(loc);
+                player.getPlayer().playSound(loc, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
                 player.revive("Purchased revive.");
                 shop.giveBook(player.getPlayer());
             } else {
+                player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0f, 0.5f);
                 player.getPlayer().sendMessage(ChatColor.RED + "You don't have enough currency.");
                 shop.giveBook(player.getPlayer());
             }

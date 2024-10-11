@@ -4,6 +4,7 @@ import club.somc.hardcorePlugin.Database;
 import club.somc.hardcorePlugin.HardcorePlayer;
 import club.somc.hardcorePlugin.items.*;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -54,6 +55,8 @@ public class CoinUsed implements Listener {
     }
 
     private void useCoin(HardcorePlayer player,  ItemStack item, Coin coin) {
+        player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.BLOCK_CHAIN_BREAK, 1.0f, 2.0f);
+
         try {
             player.addToWallet(coin.getValue(), "Used " + coin.getName());
         } catch (SQLException e) {

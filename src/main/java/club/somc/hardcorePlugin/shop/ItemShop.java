@@ -6,6 +6,7 @@ import club.somc.hardcorePlugin.items.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -151,15 +152,17 @@ public class ItemShop implements Listener {
             try {
                 if (hp.addToWallet(item.getCost()*-1, "Spent " + item.getCost() + " on " + item.toString())) {
                     player.getInventory().addItem(item.getItem());
+                    player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
                     player.sendMessage(ChatColor.GREEN + "You received: " + item.toString());
                 } else {
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0f, 0.5f);
                     player.sendMessage(ChatColor.RED + "You don't have enough currency.");
                 }
             } catch (SQLException ex) {
                 logger.warning(ex.getMessage());
             }
 
-            player.closeInventory();
+            //player.closeInventory();
         }
     }
 

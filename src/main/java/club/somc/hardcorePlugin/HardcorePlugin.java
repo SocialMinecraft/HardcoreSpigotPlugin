@@ -76,7 +76,7 @@ public final class HardcorePlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(coinUsed, this);
 
         float coinChance = config.getInt("loot.coin_chance", 30)/100f;
-        LootGenerate lootGenerate = new LootGenerate(coinChance);
+        LootGenerate lootGenerate = new LootGenerate(getLogger(), coinChance);
         getServer().getPluginManager().registerEvents(lootGenerate, this);
 
         GiveCurrency giveCurrency = new GiveCurrency(db, getLogger());

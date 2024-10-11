@@ -13,6 +13,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -66,14 +69,16 @@ public class ReviveShop implements Listener {
     private final ConfigurationSection config;
     private final Location spawn;
     private final Shop shop;
+    private final Plugin plugin;
 
     private final Map<Integer, ShopSummon> shopItems = new HashMap<>();
 
-    public ReviveShop(Database db, Logger logger, ConfigurationSection config, Shop shop) {
+    public ReviveShop(Database db, Logger logger, ConfigurationSection config, Shop shop, Plugin plugin) {
         this.db = db;
         this.logger = logger;
         this.config = config;
         this.shop = shop;
+        this.plugin = plugin;
 
         Location _spawn = Bukkit.getWorlds().get(0).getSpawnLocation();;
         for (World w : Bukkit.getWorlds()) {
@@ -115,7 +120,6 @@ public class ReviveShop implements Listener {
 
     @EventHandler
     public void onReviveShopClick(InventoryClickEvent event) {
-        //if (!event.getView().getTitle().equals("Custom Menu")) return;
         if (!event.getView().getTitle().startsWith("Revive Shop")) return;
 
         event.setCancelled(true);
@@ -126,62 +130,76 @@ public class ReviveShop implements Listener {
 
         if (clickedItem == null || clickedItem.getType() == Material.AIR) return;
 
-        int revive_cost = config.getInt("revive");
-        try {
-            if (clickedItem.getType() == Material.GRASS_BLOCK) {
-                Location loc = ensureSpawnSafety(spawn);
-                if (hp.addToWallet(revive_cost*-1, "Spent " + revive_cost + " on revive.")) {
-                    player.teleport(loc);
-                    hp.revive("Purchased revive.");
-                    shop.giveBook(player);
-                } else {
-                    player.sendMessage(ChatColor.RED + "You don't have enough currency.");
-                    return;
-                }
-            } else if (clickedItem.getType() == Material.RED_BED) {
-                Location loc = player.getRespawnLocation();
-                if (loc == null) {
-                    player.sendMessage(ChatColor.RED + "No bed found.");
-                    return;
-                }
-                if (hp.addToWallet(revive_cost*-1, "Spent " + revive_cost + " on revive.")) {
-                    player.teleport(loc);
-                    hp.revive("Purchased revive.");
-                    shop.giveBook(player);
-                } else {
-                    player.sendMessage(ChatColor.RED + "You don't have enough currency.");
-                    return;
-                }
-            } else if (clickedItem.getType() == Material.GOLDEN_APPLE) {
-                Location loc = player.getLocation();
-                if (hp.addToWallet(revive_cost*-1, "Spent " + revive_cost + " on revive.")) {
-                    player.teleport(loc);
-                    hp.revive("Purchased revive.");
-                    shop.giveBook(player);
-                } else {
-                    player.sendMessage(ChatColor.RED + "You don't have enough currency.");
-                    return;
-                }
-            } else if (clickedItem.getType() == Material.BARRIER) {
-                player.closeInventory();
-            } else if (shopItems.containsKey(event.getRawSlot())) {
-                    ShopSummon summon = shopItems.get(event.getRawSlot());
+        if (clickedItem.getType() == Material.GRASS_BLOCK) {
+            Location loc = ensureSpawnSafety(spawn);
+            reviveWithCountdown(hp,loc,10);
+            player.closeInventory();
+        } else if (clickedItem.getType() == Material.RED_BED) {
+            Location loc = player.getRespawnLocation();
+            if (loc == null) {
+                player.sendMessage(ChatColor.RED + "No bed found.");
+                return;
+            }
+            reviveWithCountdown(hp,loc,10);
+            player.closeInventory();
+        } else if (clickedItem.getType() == Material.GOLDEN_APPLE) {
+            reviveWithCountdown(hp,null,10);
+            player.closeInventory();
+        } else if (clickedItem.getType() == Material.BARRIER) {
+            player.closeInventory();
+        } else if (shopItems.containsKey(event.getRawSlot())) {
+                ShopSummon summon = shopItems.get(event.getRawSlot());
 
-                    try {
-                        if (hp.addToWallet(summon.getCost()*-1, "Spent " + summon.getCost() + " on " + summon.toString())) {
-                            summon.summon(player.getLocation());
-                            player.sendMessage(ChatColor.GREEN + "You summon: " + summon.toString());
-                        } else {
-                            player.sendMessage(ChatColor.RED + "You don't have enough currency.");
-                        }
-                    } catch (SQLException ex) {
-                        logger.warning(ex.getMessage());
+                try {
+                    if (hp.addToWallet(summon.getCost()*-1, "Spent " + summon.getCost() + " on " + summon.toString())) {
+                        summon.summon(player.getLocation());
+                        player.sendMessage(ChatColor.GREEN + "You summon: " + summon.toString());
+                    } else {
+                        player.sendMessage(ChatColor.RED + "You don't have enough currency.");
                     }
+                } catch (SQLException ex) {
+                    logger.warning(ex.getMessage());
+                }
 
-                    player.closeInventory();
+                player.closeInventory();
+        }
+    }
+
+    private void reviveWithCountdown(final HardcorePlayer player, Location loc, final int countdown) {
+        new BukkitRunnable() {
+            int _countdown = countdown;
+
+            @Override
+            public void run() {
+                if (_countdown > 0) {
+                    player.getPlayer().sendTitle("Revive in", _countdown + "", 0,20,0);
+                    _countdown--;
+                } else {
+                    revivePlayer(player, loc);
+                    cancel();
+                }
+            }
+        }.runTaskTimer(plugin, 0L, 20L); // run every second.
+    }
+
+    private void revivePlayer(final HardcorePlayer player, Location loc) {
+        if (loc == null) {
+            loc = player.getPlayer().getLocation();
+        }
+
+        try {
+            int revive_cost = config.getInt("revive");
+            if (player.addToWallet(revive_cost * -1, "Spent " + revive_cost + " on revive.")) {
+                player.getPlayer().teleport(loc);
+                player.revive("Purchased revive.");
+                shop.giveBook(player.getPlayer());
+            } else {
+                player.getPlayer().sendMessage(ChatColor.RED + "You don't have enough currency.");
+                shop.giveBook(player.getPlayer());
             }
         } catch (SQLException ex) {
             logger.warning(ex.getMessage());
+            player.getPlayer().sendMessage(ChatColor.RED + "System error occured.");
         }
     }
 

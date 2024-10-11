@@ -40,7 +40,7 @@ public class Shop implements CommandExecutor, Listener {
         this.config = config;
         this.plugin = plugin;
 
-        this.reviveShop = new ReviveShop(db, logger, config, this);
+        this.reviveShop = new ReviveShop(db, logger, config, this, plugin);
         plugin.getServer().getPluginManager().registerEvents(this.reviveShop, plugin);
 
         this.itemShop = new ItemShop(db, logger, config);

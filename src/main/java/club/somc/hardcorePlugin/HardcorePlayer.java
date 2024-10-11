@@ -94,6 +94,10 @@ public class HardcorePlayer {
         return this.db.getWallet(player.getUniqueId());
     }
 
+    public Player getPlayer() {
+        return this.player;
+    }
+
     public boolean addToWallet(int amount, String description) throws SQLException {
         if (this.getWallet() + amount < 0)
             return false;

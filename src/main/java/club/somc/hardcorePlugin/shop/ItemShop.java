@@ -169,6 +169,9 @@ public class ItemShop implements Listener {
 
         // Add coin to shop
         {
+            slot++;
+            slot++;
+
             CopperCoin cp = new CopperCoin();
             shopItems.put(slot, new ShopItem(cp, cp.getValue()));
             slot++;

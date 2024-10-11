@@ -30,7 +30,7 @@ public class ItemShop implements Listener {
     private static class ShopItem {
 
         private final int cost;
-        private ItemStack item;
+        private final ItemStack item;
 
         public ShopItem(ItemStack itemStack, int cost) {
             this.item = itemStack;
@@ -160,11 +160,6 @@ public class ItemShop implements Listener {
             }
 
             player.closeInventory();
-
-            // Here you would typically check if the player has enough money
-            // For this example, we'll just give them the item
-            //player.getInventory().addItem(new ItemStack(item.getMaterial()));
-            //player.sendMessage("§aYou bought a " + item.getMaterial().name() + " for $" + item.getCost());
         }
     }
 
@@ -176,22 +171,19 @@ public class ItemShop implements Listener {
         {
             shopItems.put(slot, new ShopItem(new Coin(), 100));
             slot++;
+
+            shopItems.put(slot, new ShopItem(new Coin(10), 1000));
+            slot++;
         }
 
         if (itemsSection != null) {
             for (String key : itemsSection.getKeys(false)) {
                 ConfigurationSection itemSection = itemsSection.getConfigurationSection(key);
                 if (itemSection != null) {
-                    //Material material = Material.valueOf(itemSection.getString("material"));
-                    //int cost = itemSection.getInt("cost");
-                    //int amount = itemSection.getInt("amount");
-                    //shopItems.put(slot, new ShopItem(material, cost, amount));
                     shopItems.put(slot, new ShopItem(itemSection));
                 }
                 slot++;
             }
         }
     }
-
-    //
 }

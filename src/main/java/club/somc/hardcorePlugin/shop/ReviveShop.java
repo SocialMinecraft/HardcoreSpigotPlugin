@@ -26,8 +26,8 @@ public class ReviveShop implements Listener {
     private static class ShopSummon {
 
         private final int cost;
-        private ItemStack item;
-        private EntityType entityType;
+        private final ItemStack item;
+        private final EntityType entityType;
 
         public ShopSummon(int cost, ItemStack item, EntityType entityType) {
             this.cost = cost;

@@ -47,9 +47,10 @@ public class CoinUsed implements Listener {
                     } else {
                         player.getInventory().remove(item);
                     }
+
+                    event.setCancelled(true);
                 }
             }
-            event.setCancelled(true);
         }
     }
 }

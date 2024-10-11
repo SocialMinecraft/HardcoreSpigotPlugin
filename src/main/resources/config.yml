@@ -16,6 +16,52 @@ offense_time: 21600
 starting_currency: 3000
 shop:
   revive: 1000
+  revive_summons: # MAX 9
+    snow_golem:
+      name: Snow Golem
+      entity: SNOW_GOLEM
+      texture: MHF_SnowGolem
+      cost: 10
+    cow:
+      name: Cow
+      entity: COW
+      texture: MHF_COW
+      cost: 10
+    sheep:
+      name: Sheep
+      entity: SHEEP
+      texture: MHF_Sheep
+      cost: 10
+    zombie:
+      name: Zombie
+      entity: ZOMBIE
+      texture: MHF_Zombie
+      cost: 100
+    skeleton:
+      name: Skeleton
+      entity: SKELETON
+      texture: MHF_Skeleton
+      cost: 100
+    creeper:
+      name: Creeper
+      entity: CREEPER
+      texture: MHF_Creeper
+      cost: 200
+    ravager:
+      name: Ravager
+      entity: RAVAGER
+      texture: MHF_Ravager
+      cost: 1000
+    vindicator:
+      name: Vindicator
+      entity: VINDICATOR
+      texture: MHF_Vindicator
+      cost: 1000
+    warden:
+      name: Warden
+      entity: WARDEN
+      texture: MHF_Warden
+      cost: 3000
   items:
     baked_potato:
       material: BAKED_POTATO

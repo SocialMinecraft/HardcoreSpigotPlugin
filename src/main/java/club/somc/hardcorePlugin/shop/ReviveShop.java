@@ -4,6 +4,7 @@ import club.somc.hardcorePlugin.Database;
 import club.somc.hardcorePlugin.HardcorePlayer;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -11,19 +12,62 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class ReviveShop implements Listener {
+
+    private static class ShopSummon {
+
+        private final int cost;
+        private ItemStack item;
+        private EntityType entityType;
+
+        public ShopSummon(int cost, ItemStack item, EntityType entityType) {
+            this.cost = cost;
+            this.item = item;
+            this.entityType = entityType;
+        }
+
+        public ItemStack getShopIcon() {
+            ItemStack re = this.item.clone();
+            ItemMeta meta = re.getItemMeta();
+
+            List<String> lore_list = Arrays.asList("§6Cost: " + this.cost, "§7Click to summon.");
+            meta.setLore(lore_list);
+            re.setItemMeta(meta);
+
+            return re;
+        }
+
+        public void summon(Location location) {
+            World world = location.getWorld();
+            world.spawnEntity(location, EntityType.WARDEN);
+        }
+
+        public int getCost() {
+            return cost;
+        }
+
+        @Override
+        public String toString() {
+            return this.entityType.toString();
+        }
+    }
 
     private final Database db;
     private final Logger logger;
     private final ConfigurationSection config;
     private final Location spawn;
     private final Shop shop;
+
+    private final Map<Integer, ShopSummon> shopItems = new HashMap<>();
 
     public ReviveShop(Database db, Logger logger, ConfigurationSection config, Shop shop) {
         this.db = db;
@@ -39,6 +83,8 @@ public class ReviveShop implements Listener {
             }
         }
         this.spawn = _spawn;
+
+        loadReviveShopSummons();
     }
 
     public void openShop(Player player) {
@@ -58,7 +104,11 @@ public class ReviveShop implements Listener {
         inventory.setItem(13, createCustomItem(Material.RED_BED, "§bRevive Bed", "§6Cost: " + config.getInt("revive"), "§7Click to revive at your bed."));
         inventory.setItem(15, createCustomItem(Material.GOLDEN_APPLE, "§bRevive Here", "§6Cost: " + config.getInt("revive"), "§7Click to revive here."));
 
-        inventory.setItem(26, createCustomItem(Material.BARRIER, "§bClose", "§7Close the shop."));
+        inventory.setItem(8, createCustomItem(Material.BARRIER, "§bClose", "§7Close the shop."));
+
+        for (Map.Entry<Integer, ShopSummon> entry : shopItems.entrySet()) {
+            inventory.setItem(entry.getKey(), entry.getValue().getShopIcon());
+        }
 
         player.openInventory(inventory);
     }
@@ -138,5 +188,32 @@ public class ReviveShop implements Listener {
         location.add(0, 1, 0);
 
         return location;
+    }
+
+    private void loadReviveShopSummons() {
+        ConfigurationSection itemsSection = config.getConfigurationSection("revive_summons");
+        int slot = 18;
+
+        if (itemsSection != null) {
+            for (String key : itemsSection.getKeys(false)) {
+                ConfigurationSection itemSection = itemsSection.getConfigurationSection(key);
+                if (itemSection != null) {
+                    EntityType entityType = EntityType.valueOf(itemSection.getString("entity"));
+                    String name = itemSection.getString("name");
+                    String texture = itemSection.getString("texture");
+                    int cost = itemSection.getInt("cost");
+
+                    // create head
+                    ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+                    SkullMeta meta = (SkullMeta) head.getItemMeta();
+                    meta.setOwner(texture);
+                    meta.setDisplayName("Summon " + name);
+                    head.setItemMeta(meta);
+
+                    shopItems.put(slot, new ShopSummon(cost, head, entityType));
+                }
+                slot++;
+            }
+        }
     }
 }

@@ -131,12 +131,11 @@ public class ItemShop implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (!event.getView().getTitle().startsWith("Item Shop")) return;
-
         event.setCancelled(true);
+        if (event.getCurrentItem() == null) return;
 
-        if (!(event.getWhoClicked() instanceof Player)) return;
+        if (!(event.getWhoClicked() instanceof Player player)) return;
 
-        Player player = (Player) event.getWhoClicked();
         HardcorePlayer hp = new HardcorePlayer(db, player);
         int slot = event.getRawSlot();
 
@@ -144,6 +143,7 @@ public class ItemShop implements Listener {
             ShopItem item = shopItems.get(slot);
 
             if (player.getInventory().firstEmpty() == -1) {
+                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0f, 0.5f);
                 player.sendMessage(ChatColor.RED + "No space in inventory.");
                 player.closeInventory();
                 return;

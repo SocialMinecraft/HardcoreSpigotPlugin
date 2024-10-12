@@ -55,6 +55,10 @@ public class CoinUsed implements Listener {
     }
 
     private void useCoin(HardcorePlayer player,  ItemStack item, Coin coin) {
+
+        // verify the item is in the player inventory
+        if(!player.getPlayer().getInventory().contains(item)) return;
+
         player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.BLOCK_CHAIN_BREAK, 1.0f, 2.0f);
 
         try {

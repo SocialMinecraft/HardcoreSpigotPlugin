@@ -3,7 +3,7 @@ database:
   port: 5432 # default port for postgres
   database: hardcore # name of your database. A database server can contain multiple databases
   user: username
-  password: passy
+  password: password
 loot:
   coin_chance: 30 # between 0 or 100
 ghost:

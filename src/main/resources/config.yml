@@ -4,3 +4,157 @@ database:
   database: hardcore # name of your database. A database server can contain multiple databases
   user: username
   password: passy
+loot:
+  coin_chance: 30 # between 0 or 100
+ghost:
+  distance: 50
+daily:
+  reset_utc: "21:00:00" # 11PM UTC or 7PM ET/EDT
+  currency: 100
+  vip_currency: 50
+offense_time: 21600
+starting_currency: 3000
+shop:
+  revive: 1000
+  revive_summons: # MAX 9
+    snow_golem:
+      name: Snow Golem
+      entity: SNOW_GOLEM
+      texture: MHF_SnowGolem
+      cost: 10
+    cow:
+      name: Cow
+      entity: COW
+      texture: MHF_COW
+      cost: 10
+    sheep:
+      name: Sheep
+      entity: SHEEP
+      texture: MHF_Sheep
+      cost: 10
+    zombie:
+      name: Zombie
+      entity: ZOMBIE
+      texture: MHF_Zombie
+      cost: 100
+    skeleton:
+      name: Skeleton
+      entity: SKELETON
+      texture: MHF_Skeleton
+      cost: 100
+    creeper:
+      name: Creeper
+      entity: CREEPER
+      texture: MHF_Creeper
+      cost: 200
+    ravager:
+      name: Ravager
+      entity: RAVAGER
+      #texture: MHF_Ravager # seems not to work.
+      texture: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWM3M2UxNmZhMjkyNjg5OWNmMTg0MzQzNjBlMjE0NGY4NGVmMWViOTgxZjk5NjE0ODkxMjE0OGRkODdlMGIyYSJ9fX0=
+      cost: 1000
+    vindicator:
+      name: Vindicator
+      entity: VINDICATOR
+      texture: MHF_Vindicator
+      cost: 1000
+    warden:
+      name: Warden
+      entity: WARDEN
+      texture: MHF_Warden
+      cost: 3000
+  items:
+    baked_potato:
+      material: BAKED_POTATO
+      amount: 16
+      cost: 25
+    dirt:
+      material: DIRT
+      amount: 64
+      cost: 25
+    stone:
+      material: STONE
+      amount: 64
+      cost: 100
+    oak_log:
+      material: OAK_LOG
+      amount: 64
+      cost: 100
+    iron_ingot:
+      material: IRON_INGOT
+      amount: 64
+      cost: 200
+    golden_apple:
+      material: GOLDEN_APPLE
+      amount: 1
+      cost: 100
+
+    creeper_spawn_egg:
+      material: CREEPER_SPAWN_EGG
+      amount: 1
+      cost: 100
+    zombie_spawn_egg:
+      material: ZOMBIE_SPAWN_EGG
+      amount: 1
+      cost: 100
+    villager_spawn_egg:
+      material: VILLAGER_SPAWN_EGG
+      amount: 1
+      cost: 100
+
+    fire_resistance_pot:
+      material: POTION
+      amount: 1
+      cost: 300
+      effectType: FIRE_RESISTANCE
+      duration: 300
+      amplifier: 0
+    resistance_pot:
+      material: POTION
+      amount: 1
+      cost: 300
+      effectType: RESISTANCE
+      duration: 300
+      amplifier: 0
+    invisibility_pot:
+      material: POTION
+      amount: 1
+      cost: 300
+      effectType: INVISIBILITY
+      duration: 300
+      amplifier: 0
+    speed_pot:
+      material: POTION
+      amount: 1
+      cost: 300
+      effectType: SPEED
+      duration: 200
+      amplifier: 0
+    night_pot:
+      material: POTION
+      amount: 1
+      cost: 200
+      effectType: NIGHT_VISION
+      duration: 300
+      amplifier: 0
+    slow_falling_pot:
+      material: POTION
+      amount: 1
+      cost: 200
+      effectType: SLOW_FALLING
+      duration: 300
+      amplifier: 0
+    strength_falling_pot:
+      material: POTION
+      amount: 1
+      cost: 200
+      effectType: STRENGTH
+      duration: 300
+      amplifier: 0
+    water_breathing_pot:
+      material: POTION
+      amount: 1
+      cost: 200
+      effectType: WATER_BREATHING
+      duration: 300
+      amplifier: 0

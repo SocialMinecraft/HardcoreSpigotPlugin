@@ -1,17 +1,17 @@
 package club.somc.hardcorePlugin;
 
-import club.somc.hardcorePlugin.commands.GrantExtraLifeCommand;
-import club.somc.hardcorePlugin.commands.MarkEvilCommand;
+import club.somc.hardcorePlugin.commands.GiveCurrency;
+import club.somc.hardcorePlugin.events.*;
+import club.somc.hardcorePlugin.shop.Shop;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.SQLException;
+import java.time.OffsetTime;
 
 public final class HardcorePlugin extends JavaPlugin {
 
     private  Database db;
-    private EvilManager evilManager;
-    private LifeManager lifeManager;
 
     @Override
     public void onEnable() {
@@ -39,16 +39,49 @@ public final class HardcorePlugin extends JavaPlugin {
             return;
         }
 
-        evilManager = new EvilManager(db);
-        lifeManager = new LifeManager(getServer(), db);
+        Shop shop = new Shop(db, getLogger(), config.getConfigurationSection("shop"), this);
+        getCommand("shop").setExecutor(shop);
+        getServer().getPluginManager().registerEvents(shop, this);
 
-        getServer().getPluginManager().registerEvents(new EventListener(this, getLogger(),lifeManager,evilManager,db), this);
+        Ghost ghost = new Ghost(config.getInt("ghost.distance", 50), db, getLogger());
+        getServer().getPluginManager().registerEvents(ghost, this);
 
-        getCommand("extra_life").setExecutor(new GrantExtraLifeCommand(getLogger(), lifeManager));
-        getCommand("extra_life").setTabCompleter(new GrantExtraLifeCommand(getLogger(), lifeManager));
+        JoinGame join = new JoinGame(db, getLogger(), shop,
+                config.getInt("starting_currency"),
+                config.getInt("shop.revive"));
+        getServer().getPluginManager().registerEvents(join, this);
 
-        getCommand("mark_evil").setExecutor(new MarkEvilCommand(getLogger(), evilManager));
-        getCommand("mark_evil").setTabCompleter(new MarkEvilCommand(getLogger(), evilManager));
+        LeaveGame leave = new LeaveGame(db, getLogger());
+        getServer().getPluginManager().registerEvents(leave, this);
+
+        Death death = new Death(db, getLogger(), shop, this);
+        getServer().getPluginManager().registerEvents(death, this);
+
+        PlayerKiller playerKiller = new PlayerKiller(db, getLogger());
+        getServer().getPluginManager().registerEvents(playerKiller, this);
+
+        OffenseManager offenseManager = new OffenseManager(db, getLogger(),
+                config.getInt("offense_time", 3600), this);
+        getServer().getPluginManager().registerEvents(offenseManager, this);
+
+        OffsetTime resetTime = OffsetTime.parse(config.getString("daily.reset_utc", "00:00:00") + "Z");
+        DailyJoin dailyJoin = new DailyJoin(db, getLogger(),
+                config.getInt("daily.currency", 75),
+                config.getInt("daily.currency", 50),
+                resetTime
+                );
+        getServer().getPluginManager().registerEvents(dailyJoin, this);
+
+        CoinUsed coinUsed = new CoinUsed(db, getLogger());
+        getServer().getPluginManager().registerEvents(coinUsed, this);
+
+        float coinChance = config.getInt("loot.coin_chance", 30)/100f;
+        LootGenerate lootGenerate = new LootGenerate(getLogger(), coinChance);
+        getServer().getPluginManager().registerEvents(lootGenerate, this);
+
+        GiveCurrency giveCurrency = new GiveCurrency(db, getLogger());
+        getCommand("give_currency").setExecutor(giveCurrency);
+        getCommand("give_currency").setTabCompleter(giveCurrency);
 
         getLogger().info("HardcorePlugin enabled");
     }

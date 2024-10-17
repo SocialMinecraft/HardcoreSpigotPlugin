@@ -1,8 +1,15 @@
 name: HardcorePlugin
-version: '1.5.2-SNAPSHOT'
+version: '2.0.0-alpha'
 main: club.somc.hardcorePlugin.HardcorePlugin
 api-version: '1.21'
 commands:
+  shop:
+    description: Purchase items and upgrades.
+    usage: /<command>
+  give_currency:
+    description: Will give a player currency.
+    usage: /<command> player amount reason
+    permission: hardcore.admin
   mark_evil:
     description: Will mark a player as evil.
     usage: /<command> player reason

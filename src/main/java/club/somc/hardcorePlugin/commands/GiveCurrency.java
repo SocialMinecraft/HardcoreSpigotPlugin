@@ -1,6 +1,7 @@
 package club.somc.hardcorePlugin.commands;
 
-import club.somc.hardcorePlugin.LifeManager;
+import club.somc.hardcorePlugin.Database;
+import club.somc.hardcorePlugin.HardcorePlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -15,13 +16,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class GrantExtraLifeCommand implements CommandExecutor, TabCompleter {
+public class GiveCurrency implements CommandExecutor, TabCompleter {
 
-    private LifeManager lifeManager;
+    private Database database;
     private Logger logger;
 
-    public GrantExtraLifeCommand(Logger logger, LifeManager lifeManager) {
-        this.lifeManager = lifeManager;
+    public GiveCurrency(Database database, Logger logger) {
+        this.database = database;
         this.logger = logger;
     }
 
@@ -31,8 +32,8 @@ public class GrantExtraLifeCommand implements CommandExecutor, TabCompleter {
             return false;
         }
 
-        if (strings.length < 2) {
-            commandSender.sendMessage(ChatColor.RED + "Must provide player name and reason.");
+        if (strings.length < 3) {
+            commandSender.sendMessage(ChatColor.RED + "Must provide player name, amount, and reason.");
             return false;
         }
 
@@ -41,13 +42,22 @@ public class GrantExtraLifeCommand implements CommandExecutor, TabCompleter {
             commandSender.sendMessage(ChatColor.RED + "Player not found. Maybe offline?");
             return false;
         }
-        String reason = String.join(" ", Arrays.stream(strings).skip(1).toArray(String[]::new));
 
-        logger.info("Giving extra life: " + giveTo.getName() + " " + reason);
+        int amount = 0;
+        try {
+            amount = Integer.parseInt(strings[1]);
+        } catch (NumberFormatException e) {
+            commandSender.sendMessage(ChatColor.RED + "Invalid amount.");
+            return false;
+        }
+        String reason = String.join(" ", Arrays.stream(strings).skip(2).toArray(String[]::new));
+
+        logger.info("Giving " + amount + " currency to: " + giveTo.getName() + " " + reason);
 
         try {
-            lifeManager.giveLife(giveTo, reason);
-            commandSender.sendMessage(ChatColor.GREEN + "Life Granted.");
+            HardcorePlayer hardcorePlayer = new HardcorePlayer(database, giveTo);
+            hardcorePlayer.addToWallet(amount, reason);
+            commandSender.sendMessage(ChatColor.GREEN + "Currency given.");
         } catch (SQLException e) {
             commandSender.sendMessage(ChatColor.RED + "System Error. Check Server log.");
             logger.warning("SQL Exception: " + e.getMessage());
@@ -63,6 +73,8 @@ public class GrantExtraLifeCommand implements CommandExecutor, TabCompleter {
             case 1:
                 break;
             case 2:
+                return List.of("[amount]");
+            case 3:
                 return List.of("[Reason]");
             default:
                 return List.of();
